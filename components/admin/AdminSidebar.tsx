@@ -11,7 +11,8 @@ import {
   MessageSquareQuote,
   Settings,
   LogOut,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Activity
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -27,14 +28,15 @@ export default function AdminSidebar({
   const pathname = usePathname();
 
   const menuItems = [
-    { name: "Overview", href: `/${locale}/admin`, icon: LayoutDashboard },
-    { name: "Programs", href: `/${locale}/admin/programs`, icon: GraduationCap },
-    { name: "Applications", href: `/${locale}/admin/applications`, icon: FileText },
-    { name: "Students", href: `/${locale}/admin/students`, icon: Users },
-    { name: "Consultations", href: `/${locale}/admin/consultations`, icon: MessageSquare },
-    { name: "Success Stories", href: `/${locale}/admin/success-stories`, icon: MessageSquareQuote },
-    { name: "Hero Banner", href: `/${locale}/admin/hero-slider`, icon: ImageIcon },
-    { name: "Settings", href: `/${locale}/admin/settings`, icon: Settings },
+    { name: locale === 'tj' ? "Умумӣ" : "Overview", href: `/${locale}/admin`, icon: LayoutDashboard },
+    { name: locale === 'tj' ? "Аналитикаи Зинда" : "Live Analytics", href: `/${locale}/admin/analytics`, icon: Activity },
+    { name: locale === 'tj' ? "Барномаҳо" : "Programs", href: `/${locale}/admin/programs`, icon: GraduationCap },
+    { name: locale === 'tj' ? "Дархостҳо" : "Applications", href: `/${locale}/admin/applications`, icon: FileText },
+    { name: locale === 'tj' ? "Донишҷӯён" : "Students", href: `/${locale}/admin/students`, icon: Users },
+    { name: locale === 'tj' ? "Машваратҳо" : "Consultations", href: `/${locale}/admin/consultations`, icon: MessageSquare },
+    { name: locale === 'tj' ? "Муваффақиятҳо" : "Success Stories", href: `/${locale}/admin/success-stories`, icon: MessageSquareQuote },
+    { name: locale === 'tj' ? "Слайдери Асосӣ" : "Hero Banner", href: `/${locale}/admin/hero-slider`, icon: ImageIcon },
+    { name: locale === 'tj' ? "Танзимот" : "Settings", href: `/${locale}/admin/settings`, icon: Settings },
   ];
 
   return (
@@ -82,13 +84,22 @@ export default function AdminSidebar({
         })}
       </div>
 
-      <div className="p-3 border-t border-[#222]">
-        <button 
-          onClick={() => signOut({ callbackUrl: `/${locale}` })}
+      <div className="p-3 border-t border-[#222] space-y-1">
+        <Link 
+          href={`/${locale}`}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-[#888] hover:bg-[#1A1A1A] hover:text-[#EDEDED] transition-colors duration-150"
         >
+          <div className="w-4 h-4 rounded-full border border-current flex items-center justify-center">
+            <div className="w-2 h-2 bg-current rounded-full" />
+          </div>
+          {locale === 'tj' ? "Гузаштан ба сайт" : "Go to Website"}
+        </Link>
+        <button 
+          onClick={() => signOut({ callbackUrl: `/${locale}` })}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-red-500/80 hover:bg-red-500/10 hover:text-red-500 transition-colors duration-150"
+        >
           <LogOut className="w-4 h-4" />
-          Sign Out
+          {locale === 'tj' ? "Баромадан" : "Sign Out"}
         </button>
       </div>
 

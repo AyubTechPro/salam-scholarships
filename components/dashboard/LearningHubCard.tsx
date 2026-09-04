@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useLocale } from 'next-intl';
 import { Play, BookOpen, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 
 type Video = {
   id: string;

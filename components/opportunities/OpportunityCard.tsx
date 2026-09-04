@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { getBlurDataURL, getSafeImageUrl } from '@/lib/image-utils';

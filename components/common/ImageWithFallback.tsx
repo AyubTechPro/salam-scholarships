@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ImageOff } from 'lucide-react';
+import { generateBrandBlurPlaceholder } from '@/lib/image-utils';
 
 interface ImageWithFallbackProps {
   src: string;
@@ -27,21 +28,23 @@ export default function ImageWithFallback({
 }: ImageWithFallbackProps) {
   const [imgSrc, setImgSrc] = useState(src);
   const [hasError, setHasError] = useState(false);
+  const blurData = generateBrandBlurPlaceholder();
 
   const handleError = () => {
-    if (!hasError) {
-      setHasError(true);
+    if (imgSrc !== '/images/placeholder.png') {
       setImgSrc('/images/placeholder.png'); // Fallback to placeholder
+    } else {
+      setHasError(true);
     }
   };
 
   if (hasError || !imgSrc) {
     return (
       <div
-        className={`bg-gray-200 flex items-center justify-center ${className || ''}`}
+        className={`bg-[#0a192f] border border-white/5 flex items-center justify-center ${className || ''}`}
         style={fill ? undefined : { width, height }}
       >
-        <ImageOff className="w-12 h-12 text-gray-400" />
+        <ImageOff className="w-12 h-12 text-gray-500/50" />
       </div>
     );
   }
@@ -56,6 +59,8 @@ export default function ImageWithFallback({
         sizes={sizes}
         priority={priority}
         onError={handleError}
+        placeholder="blur"
+        blurDataURL={blurData}
       />
     );
   }
@@ -70,6 +75,8 @@ export default function ImageWithFallback({
       sizes={sizes}
       priority={priority}
       onError={handleError}
+      placeholder="blur"
+      blurDataURL={blurData}
     />
   );
 }

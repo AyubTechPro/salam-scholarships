@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { motion } from 'framer-motion';
 import { getBlurDataURL, getSafeImageUrl } from '@/lib/image-utils';
 import { Calendar, MapPin, Award, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Eye } from 'lucide-react';

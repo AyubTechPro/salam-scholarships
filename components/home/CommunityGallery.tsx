@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { Users } from 'lucide-react';
 
 const IMAGES = [
@@ -86,7 +86,6 @@ export default function CommunityGallery() {
                 src={img.src}
                 alt={`Salam Event ${index + 1}`}
                 fill
-                unoptimized
                 className="object-cover transition-transform duration-1000 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />

@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { MapPin, Award, Quote, X, GraduationCap } from 'lucide-react';

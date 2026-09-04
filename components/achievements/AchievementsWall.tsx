@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { X, Quote, Award, MapPin, GraduationCap, Sparkles, Loader2, Filter } from 'lucide-react';
 import UIDictionaryText from '@/components/common/UIDictionaryText';
 

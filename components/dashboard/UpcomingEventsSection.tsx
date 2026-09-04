@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Video, UserCheck, CheckCircle2, Loader2, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 
 type Event = {
   id: string;

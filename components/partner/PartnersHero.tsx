@@ -3,7 +3,7 @@
 import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Network, Building2 } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 
 export default function PartnersHero() {
   const locale = useLocale() as 'tj' | 'ru' | 'en';

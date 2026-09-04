@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Bookmark, GraduationCap, MapPin, Calendar, ExternalLink, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { enUS, ru, type Locale } from 'date-fns/locale';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { getSafeImageUrl } from '@/lib/image-utils';
 
 type SavedProgram = {

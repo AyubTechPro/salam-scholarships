@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle2, MessageCircle, Copy, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 
 interface ApplicationSuccessModalProps {
   isOpen: boolean;

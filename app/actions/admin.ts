@@ -147,3 +147,58 @@ export async function updateSiteSettings(formData: FormData, locale: string) {
   revalidatePath(`/${locale}/admin/settings`);
   revalidatePath(`/${locale}`);
 }
+
+export async function createHeroSlide(formData: FormData, locale: string) {
+  const session = await getServerSession(authOptions);
+  checkAuth(session);
+
+  const title = formData.get("title") as string;
+  const subtitle = formData.get("subtitle") as string;
+  const imageUrl = formData.get("imageUrl") as string;
+  const buttonText = formData.get("buttonText") as string;
+  const buttonLink = formData.get("buttonLink") as string;
+  const isActive = formData.get("isActive") === "on";
+
+  await prisma.heroSlide.create({
+    data: {
+      title,
+      subtitle,
+      imageUrl: imageUrl || null,
+      buttonText,
+      buttonLink,
+      isActive,
+    }
+  });
+
+  revalidatePath(`/${locale}/admin/hero-slider`);
+  revalidatePath(`/${locale}`);
+  redirect(`/${locale}/admin/hero-slider`);
+}
+
+export async function updateHeroSlide(id: string, formData: FormData, locale: string) {
+  const session = await getServerSession(authOptions);
+  checkAuth(session);
+
+  const title = formData.get("title") as string;
+  const subtitle = formData.get("subtitle") as string;
+  const imageUrl = formData.get("imageUrl") as string;
+  const buttonText = formData.get("buttonText") as string;
+  const buttonLink = formData.get("buttonLink") as string;
+  const isActive = formData.get("isActive") === "on";
+
+  await prisma.heroSlide.update({
+    where: { id },
+    data: {
+      title,
+      subtitle,
+      imageUrl: imageUrl || null,
+      buttonText,
+      buttonLink,
+      isActive,
+    }
+  });
+
+  revalidatePath(`/${locale}/admin/hero-slider`);
+  revalidatePath(`/${locale}`);
+  redirect(`/${locale}/admin/hero-slider`);
+}

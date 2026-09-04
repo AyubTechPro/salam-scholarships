@@ -5,7 +5,7 @@ import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Sparkles, MapPin, Award, Calendar, ExternalLink, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { getBlurDataURL, getSafeImageUrl } from '@/lib/image-utils';
 
 interface Opportunity {

@@ -27,7 +27,7 @@ import {
   ArrowRight,
   X,
 } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import ProfileEditModal from './ProfileEditModal';
 import VerifiedBadge from './VerifiedBadge';
 import ModernRoadmap from './ModernRoadmap';

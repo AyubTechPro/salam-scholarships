@@ -1,5 +1,5 @@
 import { getLocale } from 'next-intl/server';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { prisma } from '@/lib/prisma'; // Prisma is at this path!
 
 export default async function PartnersTrustTicker() {

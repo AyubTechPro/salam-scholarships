@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Video, Users, Clock, ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { format } from 'date-fns';
 import { enUS, ru, type Locale } from 'date-fns/locale';
 import { toast } from 'sonner';

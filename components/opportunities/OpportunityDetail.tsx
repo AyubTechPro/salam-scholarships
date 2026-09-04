@@ -4,7 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, Award, CheckCircle2, Clock, Globe, GraduationCap, ExternalLink, ArrowLeft, MessageCircle, ShieldCheck, XCircle, AlertCircle, Zap, TrendingUp, Send, Loader2, BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { getBlurDataURL, getSafeImageUrl } from '@/lib/image-utils';
 import { formatDistanceToNow } from 'date-fns';
 import { enUS, ru, type Locale } from 'date-fns/locale';

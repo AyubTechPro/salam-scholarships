@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 
 export default function AboutModern() {
   const locale = useLocale();

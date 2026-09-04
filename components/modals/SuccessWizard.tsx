@@ -18,7 +18,7 @@ import {
   MapPin,
   Award,
 } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import Link from 'next/link';
 import { getBlurDataURL } from '@/lib/image-utils';
 

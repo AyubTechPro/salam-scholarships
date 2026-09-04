@@ -10,6 +10,7 @@ import { GlobalContentProvider } from '@/components/providers/GlobalContentProvi
 import { Toaster } from 'sonner';
 import '@/app/globals.css';
 import { Inter } from 'next/font/google';
+import LiveTracker from '@/components/common/LiveTracker';
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'], display: 'swap' });
 
@@ -193,6 +194,7 @@ export default async function LocaleLayout({
           <ThemeProvider>
             <SessionProvider>
               <GlobalContentProvider>
+                <LiveTracker />
                 <ConditionalLayout locale={locale}>{children}</ConditionalLayout>
                 <Toaster position="top-right" richColors />
               </GlobalContentProvider>

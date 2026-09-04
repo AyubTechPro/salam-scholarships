@@ -21,6 +21,12 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
 
   return (
     <section className="relative text-white overflow-hidden bg-[#050B14]">
+      {initialSlide?.imageUrl && (
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 mix-blend-overlay"
+          style={{ backgroundImage: `url(${initialSlide.imageUrl})` }}
+        />
+      )}
       {/* Premium Ambient Aurora Glows */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none mix-blend-screen" />
       <div className="absolute top-[20%] right-[-10%] w-[40%] h-[60%] bg-brand-gold/10 blur-[130px] rounded-full pointer-events-none mix-blend-screen" />

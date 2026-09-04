@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 import { Award, Globe, Quote } from 'lucide-react';
 
 export default function FounderRecognition() {
@@ -57,7 +57,6 @@ export default function FounderRecognition() {
                 src="/images/about/IMG_6634.PNG"
                 alt="Founder Recognition"
                 fill
-                unoptimized
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 40vw"
               />

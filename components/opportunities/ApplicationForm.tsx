@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Upload, File, X, CheckCircle2, Loader2, Send, Save, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 
 interface ApplicationFormProps {
   programId: string;

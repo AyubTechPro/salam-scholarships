@@ -3,7 +3,7 @@
 import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Globe, Sparkles } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/common/ImageWithFallback';
 
 export default function MissionModern() {
   const locale = useLocale();
