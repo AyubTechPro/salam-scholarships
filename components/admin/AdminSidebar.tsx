@@ -15,6 +15,8 @@ import {
   Activity
 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 
 export default function AdminSidebar({ 
   locale, 
@@ -26,17 +28,18 @@ export default function AdminSidebar({
   onClose?: () => void;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("admin.sidebar");
 
   const menuItems = [
-    { name: locale === 'tj' ? "Умумӣ" : "Overview", href: `/${locale}/admin`, icon: LayoutDashboard },
-    { name: locale === 'tj' ? "Аналитикаи Зинда" : "Live Analytics", href: `/${locale}/admin/analytics`, icon: Activity },
-    { name: locale === 'tj' ? "Барномаҳо" : "Programs", href: `/${locale}/admin/programs`, icon: GraduationCap },
-    { name: locale === 'tj' ? "Дархостҳо" : "Applications", href: `/${locale}/admin/applications`, icon: FileText },
-    { name: locale === 'tj' ? "Донишҷӯён" : "Students", href: `/${locale}/admin/students`, icon: Users },
-    { name: locale === 'tj' ? "Машваратҳо" : "Consultations", href: `/${locale}/admin/consultations`, icon: MessageSquare },
-    { name: locale === 'tj' ? "Муваффақиятҳо" : "Success Stories", href: `/${locale}/admin/success-stories`, icon: MessageSquareQuote },
-    { name: locale === 'tj' ? "Слайдери Асосӣ" : "Hero Banner", href: `/${locale}/admin/hero-slider`, icon: ImageIcon },
-    { name: locale === 'tj' ? "Танзимот" : "Settings", href: `/${locale}/admin/settings`, icon: Settings },
+    { name: t("overview"), href: `/${locale}/admin`, icon: LayoutDashboard },
+    { name: t("liveAnalytics"), href: `/${locale}/admin/analytics`, icon: Activity },
+    { name: t("programs"), href: `/${locale}/admin/programs`, icon: GraduationCap },
+    { name: t("applications"), href: `/${locale}/admin/applications`, icon: FileText },
+    { name: t("students"), href: `/${locale}/admin/students`, icon: Users },
+    { name: t("consultations"), href: `/${locale}/admin/consultations`, icon: MessageSquare },
+    { name: t("successStories"), href: `/${locale}/admin/success-stories`, icon: MessageSquareQuote },
+    { name: t("heroBanner"), href: `/${locale}/admin/hero-slider`, icon: ImageIcon },
+    { name: t("settings"), href: `/${locale}/admin/settings`, icon: Settings },
   ];
 
   return (
@@ -55,11 +58,14 @@ export default function AdminSidebar({
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-      <div className="h-14 flex items-center px-6 border-b border-[#222]">
-        <div className="w-6 h-6 bg-[#EDEDED] rounded-md flex items-center justify-center mr-3">
-          <span className="text-[#0A0A0A] font-bold text-sm tracking-tighter">S</span>
+      <div className="h-14 flex items-center justify-between px-6 border-b border-[#222]">
+        <div className="flex items-center">
+          <div className="w-6 h-6 bg-[#EDEDED] rounded-md flex items-center justify-center mr-3">
+            <span className="text-[#0A0A0A] font-bold text-sm tracking-tighter">S</span>
+          </div>
+          <span className="text-[#EDEDED] font-semibold text-sm tracking-tight">Salam Admin</span>
         </div>
-        <span className="text-[#EDEDED] font-semibold text-sm tracking-tight">Salam Admin</span>
+        <LanguageSwitcher />
       </div>
 
       <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
@@ -92,14 +98,14 @@ export default function AdminSidebar({
           <div className="w-4 h-4 rounded-full border border-current flex items-center justify-center">
             <div className="w-2 h-2 bg-current rounded-full" />
           </div>
-          {locale === 'tj' ? "Гузаштан ба сайт" : "Go to Website"}
+          {t("goToWebsite")}
         </Link>
         <button 
           onClick={() => signOut({ callbackUrl: `/${locale}` })}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-red-500/80 hover:bg-red-500/10 hover:text-red-500 transition-colors duration-150"
         >
           <LogOut className="w-4 h-4" />
-          {locale === 'tj' ? "Баромадан" : "Sign Out"}
+          {t("signOut")}
         </button>
       </div>
 
