@@ -105,8 +105,6 @@ export default function Logo({ showTagline = false, className = '', size = 'md',
             fill
             className="object-contain object-left scale-[2.5] origin-left translate-x-4"
             priority
-            sizes={`${config.width}px`}
-            onError={() => setSettings(null)}
           />
         ) : (
           <TextFallback />
