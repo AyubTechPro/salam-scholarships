@@ -1,0 +1,1327 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Seed configuration
+// Run with: npm run db:seed
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+  CONTENT_DIRECTOR
+  GROWTH_MANAGER
+  CONSULTANT
+  PARTNER
+}
+
+enum ProfileStatus {
+  LEAD // New inquiry, not yet active
+  ACTIVE // Active student working with consultant
+  APPLIED // Has submitted applications
+  SUCCESS // Successfully accepted to program
+  INACTIVE // No longer active
+}
+
+enum UserStatus {
+  NEW
+  CONTACTED
+  IN_PROGRESS
+  SUCCESS
+  REJECTED
+}
+
+enum ConsultationStatus {
+  NEW
+  CONTACTED
+  IN_PROGRESS
+  SUCCESS
+  REJECTED
+}
+
+model ConsultationRequest {
+  id                String  @id @default(cuid())
+  name              String
+  email             String
+  phone             String?
+  englishLevel      String?
+  targetCountry     String?
+  targetLevel       String?
+  targetProgramId   String? // Missing Link 1: Track the program the user clicked on
+  message           String  @db.Text
+  preferredLanguage String  @default("en")
+
+  // CRM Workflow Fields
+  status        ConsultationStatus @default(NEW)
+  internalNotes String?            @db.Text // Team notes about consultation progress
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+enum ProgramLevel {
+  SCHOOL
+  BACHELOR
+  MASTER
+  PHD
+}
+
+enum FundingType {
+  FULL
+  PARTIAL
+  NONE
+}
+
+enum ProgramCategory {
+  SCHOLARSHIP
+  FORUM
+  EXCHANGE
+  INTERNSHIP
+  SEMINAR
+  SUMMER_SCHOOL
+  CONFERENCE
+  FELLOWSHIP
+  COMPETITION
+}
+
+enum ProgramRegion {
+  EUROPE
+  ASIA
+  NORTH_AMERICA
+  SOUTH_AMERICA
+  OCEANIA
+  AFRICA
+  ANTARCTICA
+}
+
+enum EventType {
+  ONLINE
+  OFFLINE
+}
+
+enum EventStatus {
+  DRAFT
+  OPEN
+  CLOSED
+  ARCHIVED
+}
+
+enum SeminarStatus {
+  OPEN
+  CLOSED
+  ARCHIVED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  ACCEPTED
+  REJECTED
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  emailVerified     DateTime?
+  password          String?
+  role              UserRole  @default(USER)
+  preferredLanguage String    @default("en")
+
+  // Upwork Trust & Security Model (Anti-Fraud)
+  isVerified        Boolean   @default(false) // B2B Trust Badge
+  applicationTokens Int       @default(3) // Upwork Connects equivalent
+
+  // Simplified Professional Profile
+  image           String? // Profile Picture URL (Cloudinary)
+  name            String?
+  surname         String?
+  profession      String? // Student, Developer, Doctor, etc.
+  city            String?
+  country         String?
+  educationPlace  String? // University/School
+  languageLevel   String? // Beginner, Intermediate, Advanced, Native
+  telegramOrPhone String? // Telegram username or phone number
+  bio             String? @db.Text // Short description
+
+  // Document Vault (Centralized Storage)
+  cvUrl           String?
+  passportUrl     String?
+  transcriptUrl   String?
+  identitySelfieUrl String? // Phase 7: Strict B2B Legal Verification (Passport + Selfie)
+
+  // Phone Number (for registration)
+  phoneNumber String? // Formatted phone with country code (e.g., +992901234567)
+
+  // Telegram Integration
+  telegramId     String? // Telegram chat ID for receiving notifications via bot
+  telegramChatId String? @unique // Alternative Telegram chat ID field
+
+  // CRM Workflow Fields
+  crmStatus UserStatus @default(NEW) // CRM status for team management
+
+  // User Preferences (from Wizard)
+  preferredCountries String[] // Array of preferred countries
+  preferredFields    String[] // Array of preferred fields of study
+
+  // Legacy fields (kept for backward compatibility)
+  phone                       String?
+  phoneVerified               Boolean       @default(false)
+  certificates                Json?
+  languageScores              Json?
+  academicHistory             Json?
+  fieldOfInterest             String?
+  targetDestinations          Json?
+  profileCompletionPercentage Int           @default(0)
+  profileStatus               ProfileStatus @default(LEAD)
+  assignedConsultantId        String?
+  internalNotes               String?       @db.Text
+  lastContactedAt             DateTime?
+  nextFollowUpAt              DateTime?
+
+  // Relations
+  assignedConsultant User?  @relation("ConsultantStudents", fields: [assignedConsultantId], references: [id])
+  students           User[] @relation("ConsultantStudents") // Students assigned to this consultant
+
+  // B2B Partner Link
+  partnerId          String?
+  partner            Partner? @relation("UserPartner", fields: [partnerId], references: [id])
+
+  // OAuth
+  accounts Account[] @relation("UserAccounts")
+  sessions Session[] @relation("UserSessions")
+
+  // Relations
+  applications         Application[]
+  eventBookings        EventBooking[]
+  seminarRegistrations SeminarRegistration[] @relation("UserSeminarRegistrations")
+  notifications        Notification[]        @relation("UserNotifications")
+  studentNotifications StudentNotification[] @relation("StudentNotifications") // Student-specific notifications
+  auditLogs            AuditLog[]            @relation("UserAuditLogs") // Actions performed by this user
+  savedPrograms        SavedProgram[]        @relation("UserSavedPrograms")
+  activities           UserActivity[]        @relation("UserActivities")
+  emailCampaigns       EmailCampaign[]       @relation("EmailCampaigns")
+  partnerLeads         PartnerLead[]         @relation("UserPartnerLeads")
+  telegramLinkToken    TelegramLinkToken?    @relation("TelegramLinkTokens")
+
+  deletedAt DateTime? // Soft delete
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([telegramId])
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation("UserAccounts", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Telegram Account Linking Token
+model TelegramLinkToken {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation("TelegramLinkTokens", fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([expiresAt])
+}
+
+model Program {
+  id            String  @id @default(cuid())
+  title         String
+  titleRu       String?
+  titleTj       String?
+  description   String  @db.Text
+  descriptionRu String? @db.Text
+  descriptionTj String? @db.Text
+  slug          String  @unique
+
+  level       ProgramLevel
+  category    ProgramCategory
+  fundingType FundingType
+  region      ProgramRegion? // Europe, Asia, North America, Oceania, Africa
+  country     String
+  institution String
+
+  deadline  DateTime
+  startDate DateTime?
+  endDate   DateTime?
+
+  imageUrl           String?
+  websiteUrl         String?
+  officialWebsiteUrl String? // Link to the original source/official website
+  promoSocialLink    String? // Promo social link for sharing on social media
+  applicationUrl     String?
+
+  isVerified          Boolean   @default(false)
+  isFeatured          Boolean   @default(false) // Featured programs appear first
+  isActive            Boolean   @default(true)
+  isExpired           Boolean   @default(false) // Auto-set when deadline passes
+  deletedAt           DateTime? // Soft delete
+  requiresEnglishCert Boolean   @default(true) // Whether IELTS/TOEFL is required
+
+  // AI translation metadata
+  aiTranslated Boolean @default(false)
+
+  // Analytics
+  viewCount Int @default(0)
+
+  // SEO & Global Features
+  eligibleNationalities Json? // Array of country codes or ["ALL"] for global programs
+  partnerId             String? // If program is posted by a Partner organization
+  partner               Partner? @relation("PartnerPrograms", fields: [partnerId], references: [id])
+
+  // Dynamic fields based on category (stored as JSON)
+  dynamicFields Json? // { meeting_link?: string, recording_url?: string, application_fee?: number, etc. }
+
+  applications Application[]
+  savedBy      SavedProgram[] @relation("ProgramSavedBy")
+  partnerLeads PartnerLead[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([viewCount])
+  @@index([isActive, viewCount])
+  @@index([isFeatured, isActive])
+  @@index([slug])
+  @@index([partnerId])
+  @@index([level, category, isActive])
+  @@index([region, isActive])
+  @@index([country, isActive])
+  @@index([category, isActive])
+  @@index([fundingType, isActive])
+  @@index([deadline, isActive])
+  @@index([isActive, isExpired, deadline])
+}
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String
+  nameRu      String?
+  nameTj      String?
+  slug        String  @unique
+  description String? @db.Text
+  icon        String?
+  order       Int     @default(0)
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+}
+
+// Data Dictionary: Countries
+model Country {
+  id       String  @id @default(cuid())
+  name     String
+  nameRu   String?
+  nameTj   String?
+  code     String  @unique // ISO country code (e.g., "US", "TJ")
+  flag     String? // Flag emoji or URL
+  order    Int     @default(0)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+}
+
+// Data Dictionary: Professions
+model Profession {
+  id       String  @id @default(cuid())
+  name     String
+  nameRu   String?
+  nameTj   String?
+  category String? // e.g., "Education", "Technology", "Healthcare"
+  order    Int     @default(0)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+  @@index([category])
+}
+
+model Application {
+  id        String            @id @default(cuid())
+  userId    String
+  programId String
+  status    ApplicationStatus @default(DRAFT)
+
+  // Application data
+  motivationLetter String? @db.Text
+  motivationScore  Float? // AI-analyzed score
+
+  // File uploads (Cloudinary URLs)
+  cvUrl         String? // CV/Resume file URL
+  transcriptUrl String? // Academic transcript file URL
+  passportUrl   String? // Passport copy file URL
+
+  // Missing Link 3: Payment Tracking
+  receiptUrl    String? // Bank transfer receipt URL
+  paymentStatus String  @default("PENDING") // PENDING, VERIFIED, REJECTED, WAIVED
+
+  // Timeline tracking
+  submittedAt DateTime?
+  reviewedAt  DateTime?
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, programId])
+  @@index([userId, status])
+  @@index([programId, status])
+  @@index([status, submittedAt])
+  @@index([submittedAt])
+  @@index([motivationScore])
+}
+
+model Event {
+  id            String  @id @default(cuid())
+  title         String
+  titleRu       String?
+  titleTj       String?
+  description   String  @db.Text
+  descriptionRu String? @db.Text
+  descriptionTj String? @db.Text
+
+  type                 EventType
+  startDate            DateTime
+  endDate              DateTime?
+  registrationDeadline DateTime // Deadline for registration
+  location             String? // For offline events (Zoom/Office)
+  meetingUrl           String? // For online events
+
+  image           String? // Cloudinary URL
+  maxParticipants Int? // Max capacity for event
+
+  status   EventStatus @default(DRAFT) // DRAFT, OPEN, CLOSED, ARCHIVED
+  isActive Boolean     @default(true) // Live/Hidden toggle
+
+  bookings EventBooking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, startDate])
+  @@index([isActive])
+  @@index([registrationDeadline])
+}
+
+model EventBooking {
+  id           String   @id @default(cuid())
+  userId       String
+  eventId      String
+  registeredAt DateTime @default(now()) // When user registered
+  qrCode       String   @unique
+  checkedIn    Boolean  @default(false)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, eventId])
+  @@index([registeredAt])
+}
+
+// Seminar Model (Fully Automated Management)
+model Seminar {
+  id            String  @id @default(cuid())
+  title         String
+  titleRu       String?
+  titleTj       String?
+  description   String  @db.Text
+  descriptionRu String? @db.Text
+  descriptionTj String? @db.Text
+
+  date                 DateTime // Seminar date/time
+  registrationDeadline DateTime // Deadline for registration
+  location             String? // Physical location or "Online"
+  image                String? // Cloudinary URL
+
+  status          SeminarStatus @default(OPEN)
+  maxParticipants Int           @default(100)
+
+  registrations SeminarRegistration[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, date])
+  @@index([registrationDeadline])
+  @@index([date])
+}
+
+// Seminar Registration (One-Click Registration)
+model SeminarRegistration {
+  id           String   @id @default(cuid())
+  userId       String
+  seminarId    String
+  registeredAt DateTime @default(now())
+
+  user    User    @relation("UserSeminarRegistrations", fields: [userId], references: [id], onDelete: Cascade)
+  seminar Seminar @relation(fields: [seminarId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, seminarId], name: "userId_seminarId")
+  @@index([seminarId])
+  @@index([registeredAt])
+}
+
+// Audit Log for tracking admin actions
+model AuditLog {
+  id          String  @id @default(cuid())
+  userId      String // Admin who performed the action
+  action      String // "CREATE", "UPDATE", "DELETE", "VIEW"
+  entityType  String // "PROGRAM", "USER", "APPLICATION", "EVENT", etc.
+  entityId    String?
+  description String? @db.Text
+  metadata    Json? // Additional data about the action
+
+  user User @relation("UserAuditLogs", fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@index([action, entityType])
+}
+
+// Notification system for team collaboration
+model Notification {
+  id       String  @id @default(cuid())
+  userId   String? // If null, notification is for all admins
+  type     String // "CONSULTATION_REQUEST", "NEW_APPLICATION", "SYSTEM", "TEAM"
+  title    String
+  message  String  @db.Text
+  link     String? // URL to related resource
+  isRead   Boolean @default(false)
+  priority String  @default("NORMAL") // "LOW", "NORMAL", "HIGH", "URGENT"
+
+  user User? @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  @@index([userId, isRead])
+  @@index([type])
+  @@index([createdAt])
+}
+
+// Internal Seminars (for CONTENT_DIRECTOR)
+model InternalSeminar {
+  id            String  @id @default(cuid())
+  title         String
+  titleRu       String?
+  titleTj       String?
+  description   String  @db.Text
+  descriptionRu String? @db.Text
+  descriptionTj String? @db.Text
+
+  startDate  DateTime
+  endDate    DateTime?
+  location   String?
+  meetingUrl String?
+
+  imageUrl    String?
+  maxCapacity Int?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Success Stories (for GROWTH_MANAGER)
+model SuccessStory {
+  id             String  @id @default(cuid())
+  name           String
+  nameRu         String?
+  nameTj         String?
+  program        String
+  programRu      String?
+  programTj      String?
+  country        String
+  university     String?
+  field          String?
+  keyToSuccess   String  @db.Text
+  keyToSuccessRu String? @db.Text
+  keyToSuccessTj String? @db.Text
+  quote          String  @db.Text
+  quoteRu        String? @db.Text
+  quoteTj        String? @db.Text
+  fullStory      String  @db.Text
+  fullStoryRu    String? @db.Text
+  fullStoryTj    String? @db.Text
+  photoUrl       String
+  achievement    String
+  achievementRu  String?
+  achievementTj  String?
+
+  isActive Boolean @default(true)
+  order    Int     @default(0) // For custom ordering
+  year     Int? // Year of achievement (for filtering)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([order])
+  @@index([year])
+}
+
+// Saved Programs (for students to bookmark)
+model SavedProgram {
+  id        String @id @default(cuid())
+  userId    String
+  programId String
+
+  user    User    @relation("UserSavedPrograms", fields: [userId], references: [id], onDelete: Cascade)
+  program Program @relation("ProgramSavedBy", fields: [programId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, programId])
+  @@index([userId])
+  @@index([programId])
+}
+
+// User Activity Tracking (for analytics)
+model UserActivity {
+  id           String  @id @default(cuid())
+  userId       String? // Optional: allows tracking guest activities
+  activityType String // "VIEW", "SEARCH", "SAVE", "APPLY"
+  entityType   String // "PROGRAM", "CATEGORY", "COUNTRY", "PAGE"
+  entityId     String? // ID of the entity (e.g., programId)
+  metadata     Json? // Additional data (e.g., search query, filters, country)
+
+  user User? @relation("UserActivities", fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, activityType])
+  @@index([activityType, entityType])
+  @@index([createdAt])
+  @@index([entityType, entityId])
+}
+
+// Hero Slides (Dynamic CMS)
+model HeroSlide {
+  id           String  @id @default(cuid())
+  title        String
+  titleRu      String?
+  titleTj      String?
+  subtitle     String  @db.Text
+  subtitleRu   String? @db.Text
+  subtitleTj   String? @db.Text
+  imageUrl     String? // Optional - if provided, shows two-column layout
+  bgGradient   String? // Optional background gradient (e.g., "from-blue-900 via-purple-900 to-pink-900")
+  buttonText   String
+  buttonTextRu String?
+  buttonTextTj String?
+  buttonLink   String // Can be internal route or external URL
+  order        Int     @default(0)
+  isActive     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+  @@index([order])
+}
+
+// Site Settings (Global configuration) - NO-CODE PLATFORM
+model SiteSettings {
+  id                      String  @id @default("global")
+  siteName                String  @default("Salam Consulting")
+  siteNameRu              String?
+  siteNameTj              String?
+  supportEmail            String?
+  supportPhone            String? // International format
+  officeAddress           String? @db.Text
+  officeAddressRu         String? @db.Text
+  officeAddressTj         String? @db.Text
+  footerText              String? @db.Text
+  footerTextRu            String? @db.Text
+  footerTextTj            String? @db.Text
+  linkedinUrl             String?
+  instagramUrl            String?
+  telegramChannelUrl      String?
+  telegramSupportUsername String?
+  whatsappUrl             String?
+  contactEmail            String? // Legacy - use supportEmail
+  maintenanceMode         Boolean @default(false)
+  maintenanceMessage      String? @db.Text
+  maintenanceMessageRu    String? @db.Text
+  maintenanceMessageTj    String? @db.Text
+
+  // Telegram Notification Settings
+  telegramBotToken             String? // Bot token from @BotFather
+  telegramChatId               String? // Chat ID for notifications (can be channel, group, or user ID)
+  telegramNotificationsEnabled Boolean @default(false)
+
+  // AI Content Assistant Settings
+  aiProvider String? // "openai" or "claude"
+  aiApiKey   String? // API key for AI provider
+  aiEnabled  Boolean @default(false)
+
+  // Branding/Theme Settings
+  primaryColor      String  @default("#0a192f") // Brand Navy
+  secondaryColor    String  @default("#1e3a5f") // Dark Navy
+  accentColor       String  @default("#eab308") // Brand Gold
+  fontFamily        String  @default("Inter, sans-serif") // Primary font
+  headingFontFamily String? // Varsity/Athletic font for headings
+
+  // Logo Settings (Dynamic Logo Engine)
+  logoUrl      String? // Default logo (Cloudinary URL)
+  logoLightUrl String? // Logo for light mode (Cloudinary URL)
+  logoDarkUrl  String? // Logo for dark mode (Cloudinary URL)
+  faviconUrl   String? // Favicon URL (Cloudinary URL)
+
+  // Analytics & Tracking
+  googleAnalyticsId String? // Google Analytics 4 (GA4) Measurement ID (e.g., "G-XXXXXXXXXX")
+
+  // Hero Section Control Center
+  heroTickerMode    String  @default("AUTO") // "AUTO" or "MANUAL"
+  heroTickerText    String? @db.Text // Custom text for the pill notification
+  heroTickerTextRu  String? @db.Text // Custom text (Russian)
+  heroTickerTextTj  String? @db.Text // Custom text (Tajik)
+  heroTickerLink    String? // Where clicking the pill takes you
+  heroHeadlineWords Json? // Array of words for typewriter effect: [{"en": "Masters", "ru": "Магистратура", "tj": "Магистр"}, ...]
+
+  // Trust Bar Configuration (Dynamic Stats)
+  trustBarItems Json? // Array of trust bar items: [{"icon": "GraduationCap", "statKey": "programs", "labelEn": "Opportunities", "labelRu": "...", "labelTj": "...", "color": "text-gold", "order": 0}, ...]
+
+  // Footer Contact Overrides (Optional - falls back to supportPhone/Email if not set)
+  footerPhone   String? // Phone number specifically for footer display
+  footerEmail   String? // Email specifically for footer display
+  footerAddress String? @db.Text // Address specifically for footer display
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Site Stats (Trust Builder - Marketing Offsets)
+model SiteStats {
+  id                      String  @id @default("global")
+  manualProgramsOffset    Int     @default(0)
+  manualCountriesOffset   Int     @default(0)
+  manualConsultationsBase Int     @default(2000)
+  showLiveCounts          Boolean @default(true)
+  heroStatsOpportunities  Int     @default(500)
+  heroStatsCountries      Int     @default(50)
+  heroStatsStudents       Int     @default(10000)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Business Rules (Dynamic Logic Configuration) - NO-CODE PLATFORM
+model BusinessRules {
+  id String @id @default("global")
+
+  // Deadline & Urgency Rules
+  urgentBadgeThresholdDays Int @default(7) // Days until deadline to show "URGENT" badge
+
+  // Pagination Limits (JSON object: { "opportunities": 12, "admin": 20, "events": 10, "achievements": 12 })
+  paginationLimits Json @default("{\"opportunities\":12,\"admin\":20,\"events\":10,\"achievements\":12}")
+
+  // Rate Limiting Rules
+  rateLimitRequests      Int @default(5) // Max requests per window
+  rateLimitWindowSeconds Int @default(60) // Time window in seconds
+
+  // Email & Security Rules
+  passwordResetLinkExpiryHours Int @default(1) // Hours until password reset link expires
+  otpExpiryMinutes             Int @default(10) // Minutes until OTP expires
+
+  // UI Limits
+  topDeadlinesLimit          Int @default(3) // Number of top deadlines to show in ticker
+  featuredOpportunitiesLimit Int @default(6) // Number of featured opportunities
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Email Templates (System Emails) - NO-CODE PLATFORM
+model EmailTemplate {
+  id          String @id @default(cuid())
+  templateKey String @unique // "WELCOME", "PASSWORD_RESET", "OTP", "EVENT_REGISTRATION", "NEW_OPPORTUNITY"
+
+  subject   String
+  subjectRu String?
+  subjectTj String?
+
+  htmlContent   String  @db.Text // HTML email content with variables: {{name}}, {{link}}, {{otp}}, etc.
+  htmlContentRu String? @db.Text
+  htmlContentTj String? @db.Text
+
+  textContent   String  @db.Text // Plain text fallback
+  textContentRu String? @db.Text
+  textContentTj String? @db.Text
+
+  variables Json? // Available variables: ["name", "email", "link", "otp", "eventTitle", "deadline", etc.]
+  category  String  @default("SYSTEM") // "SYSTEM", "MARKETING", "NOTIFICATION"
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([templateKey])
+  @@index([category, isActive])
+}
+
+// SEO Redirects - NO-CODE PLATFORM
+model Redirect {
+  id         String  @id @default(cuid())
+  fromPath   String  @unique // Old URL path (e.g., "/old-page", "/blog/2024/post")
+  toPath     String // New URL path (can be external: "https://...")
+  statusCode Int     @default(301) // 301 (Permanent) or 302 (Temporary)
+  isActive   Boolean @default(true)
+  isExternal Boolean @default(false) // If true, toPath is external URL
+
+  description String? // Admin notes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([fromPath, isActive])
+  @@index([isActive])
+}
+
+// Contact Messages (from Contact page)
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String? // International phone format
+  subject   String
+  message   String   @db.Text
+  status    String   @default("NEW") // NEW, READ, REPLIED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Learning Hub: Video Content
+model VideoContent {
+  id            String  @id @default(cuid())
+  title         String
+  titleRu       String?
+  titleTj       String?
+  description   String  @db.Text
+  descriptionRu String? @db.Text
+  descriptionTj String? @db.Text
+  videoUrl      String // Cloudinary URL
+  thumbnailUrl  String? // Cloudinary thumbnail
+  category      String // "CV_TIPS", "INTERVIEW", "APPLICATION", "LANGUAGE", "GENERAL"
+  duration      Int? // Duration in seconds
+  order         Int     @default(0)
+  isActive      Boolean @default(true)
+  viewCount     Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category, isActive])
+  @@index([order])
+  @@index([isActive])
+}
+
+// Student Notifications (separate from admin notifications)
+model StudentNotification {
+  id       String  @id @default(cuid())
+  userId   String
+  type     String // "STATUS_UPDATE", "NEW_SEMINAR", "DEADLINE_REMINDER", "NEW_VIDEO", "SYSTEM"
+  title    String
+  message  String  @db.Text
+  link     String? // URL to related resource
+  isRead   Boolean @default(false)
+  priority String  @default("NORMAL") // "LOW", "NORMAL", "HIGH", "URGENT"
+
+  user User @relation("StudentNotifications", fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  @@index([userId, isRead])
+  @@index([type])
+  @@index([createdAt])
+}
+
+// Dynamic CMS: Landing Page Content
+model LandingContent {
+  id String @id @default("landing")
+
+  // Hero Slider
+  heroSlides Json // Array of { imageUrl, title, titleRu, titleTj, subtitle, subtitleRu, subtitleTj, ctaText, ctaLink }
+
+  // About Us Section
+  aboutTitle   String?
+  aboutTitleRu String?
+  aboutTitleTj String?
+  aboutText    String? @db.Text
+  aboutTextRu  String? @db.Text
+  aboutTextTj  String? @db.Text
+  aboutImage   String?
+
+  // Mission Section
+  missionTitle   String?
+  missionTitleRu String?
+  missionTitleTj String?
+  missionText    String? @db.Text
+  missionTextRu  String? @db.Text
+  missionTextTj  String? @db.Text
+  missionImage   String?
+  missionValues  Json? // Array of { title, titleRu, titleTj, description, descriptionRu, descriptionTj, icon }
+
+  // Path Section
+  pathTitle   String?
+  pathTitleRu String?
+  pathTitleTj String?
+  pathText1   String? @db.Text
+  pathText1Ru String? @db.Text
+  pathText1Tj String? @db.Text
+  pathText2   String? @db.Text
+  pathText2Ru String? @db.Text
+  pathText2Tj String? @db.Text
+  pathImage   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Dynamic Page Content Blocks (Scalable CMS for About/Mission/Any Page)
+// Allows admins to add unlimited sections (e.g., "Our Philosophy", "Our Story", etc.)
+model PageContent {
+  id               String  @id @default(cuid())
+  page             String // "about", "mission", "home", etc.
+  section          String? // Optional: "about-main", "mission-values", "philosophy", etc.
+  title            String
+  titleRu          String?
+  titleTj          String?
+  content          String  @db.Text
+  contentRu        String? @db.Text
+  contentTj        String? @db.Text
+  image            String? // Cloudinary URL
+  buttonText       String? // Optional CTA button text
+  buttonTextRu     String?
+  buttonTextTj     String?
+  buttonLink       String? // Optional CTA button link (internal or external)
+  backgroundImage  String? // Background image URL for section
+  additionalImages Json? // Array of image URLs: ["url1", "url2", ...]
+  order            Int     @default(0) // For sorting multiple blocks on same page
+  isActive         Boolean @default(true)
+  layout           String  @default("default") // "default", "image-left", "image-right", "full-width", "grid"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([page, isActive, order])
+  @@index([page, section])
+  @@index([order])
+}
+
+// Team Members (CMS)
+model TeamMember {
+  id        String  @id @default(cuid())
+  name      String
+  nameRu    String?
+  nameTj    String?
+  role      String
+  roleRu    String?
+  roleTj    String?
+  photo     String // Cloudinary URL
+  instagram String?
+  linkedin  String?
+  telegram  String?
+  email     String?
+  order     Int     @default(0)
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+  @@index([order])
+}
+
+// Founder Recognition (CMS)
+model Recognition {
+  id                  String  @id @default("founder")
+  title               String
+  titleRu             String?
+  titleTj             String?
+  subtitle            String? @db.Text
+  subtitleRu          String? @db.Text
+  subtitleTj          String? @db.Text
+  imageUrl            String
+  awardName           String?
+  awardNameRu         String?
+  awardNameTj         String?
+  location            String?
+  locationRu          String?
+  locationTj          String?
+  achievementTitle    String? @db.Text
+  achievementTitleRu  String? @db.Text
+  achievementTitleTj  String? @db.Text
+  achievementText     String? @db.Text
+  achievementTextRu   String? @db.Text
+  achievementTextTj   String? @db.Text
+  representingTitle   String? @db.Text
+  representingTitleRu String? @db.Text
+  representingTitleTj String? @db.Text
+  representingText    String? @db.Text
+  representingTextRu  String? @db.Text
+  representingTextTj  String? @db.Text
+  quote               String? @db.Text
+  quoteRu             String? @db.Text
+  quoteTj             String? @db.Text
+  quoteAuthor         String?
+  quoteAuthorRu       String?
+  quoteAuthorTj       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Dynamic CMS: Static Pages
+model StaticPage {
+  id        String  @id @default(cuid())
+  slug      String  @unique // "privacy", "terms", "partners"
+  title     String
+  titleRu   String?
+  titleTj   String?
+  content   String  @db.Text // Rich text HTML
+  contentRu String? @db.Text
+  contentTj String? @db.Text
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slug, isActive])
+}
+
+// UI Dictionary (Dynamic Button & Label Manager)
+model UIDictionary {
+  id          String  @id @default(cuid())
+  key         String  @unique // e.g., "consultation.button", "hero.cta", "footer.subscribe"
+  en          String // English text
+  ru          String? // Russian text
+  tj          String? // Tajik text
+  category    String? // Optional: "buttons", "labels", "messages", etc.
+  description String? // Help text for admins
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([category])
+}
+
+// Navigation Menu (Dynamic Navbar & Footer Links)
+model NavigationMenu {
+  id         String           @id @default(cuid())
+  label      String // Display text (EN)
+  labelRu    String?
+  labelTj    String?
+  href       String // URL path (e.g., "/opportunities" or "https://...")
+  icon       String? // Optional icon name (e.g., "GraduationCap")
+  order      Int              @default(0)
+  location   String           @default("navbar") // "navbar", "footer", "both"
+  section    String? // For footer: "quickLinks", "support", "legal", etc.
+  parentId   String? // For submenus/dropdowns
+  parent     NavigationMenu?  @relation("NavigationChildren", fields: [parentId], references: [id])
+  children   NavigationMenu[] @relation("NavigationChildren")
+  isActive   Boolean          @default(true)
+  isExternal Boolean          @default(false) // External links open in new tab
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([location, isActive, order])
+  @@index([parentId])
+  @@index([order])
+}
+
+// SEO Configuration
+model SEOConfig {
+  id            String  @id @default(cuid())
+  pagePath      String  @unique // e.g., "/", "/opportunities", "/about"
+  title         String
+  titleRu       String?
+  titleTj       String?
+  description   String  @db.Text
+  descriptionRu String? @db.Text
+  descriptionTj String? @db.Text
+  keywords      String? // Comma-separated
+  ogImage       String? // Open Graph image URL
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([pagePath])
+}
+
+// Email Campaigns
+model EmailCampaign {
+  id        String  @id @default(cuid())
+  subject   String
+  subjectRu String?
+  subjectTj String?
+  content   String  @db.Text // HTML email content
+  contentRu String? @db.Text
+  contentTj String? @db.Text
+
+  recipientType String @default("ALL") // ALL, FILTERED, CUSTOM
+  filters       Json? // { fieldOfInterest?: string[], targetCountries?: string[], etc. }
+  recipientIds  Json? // Array of user IDs for CUSTOM type
+
+  status      String    @default("DRAFT") // DRAFT, SCHEDULED, SENT, FAILED
+  sentAt      DateTime?
+  sentCount   Int       @default(0)
+  failedCount Int       @default(0)
+
+  createdBy String // User ID of admin who created
+  user      User   @relation("EmailCampaigns", fields: [createdBy], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// B2B Partner & Organizer Portal
+model Partner {
+  id            String  @id @default(cuid())
+  name          String
+  nameRu        String?
+  nameTj        String?
+  email         String  @unique
+  website       String?
+  logo          String? // Cloudinary URL
+  description   String? @db.Text
+  descriptionRu String? @db.Text
+  descriptionTj String? @db.Text
+  country       String? // ISO country code
+  type          String  @default("UNIVERSITY") // UNIVERSITY, FOUNDATION, ORGANIZATION, GOVERNMENT
+  isVerified    Boolean @default(false)
+  isActive      Boolean @default(true)
+
+  // Analytics & Leads
+  totalViews    Int @default(0)
+  totalLeads    Int @default(0)
+  totalPrograms Int @default(0)
+
+  // Relations
+  programs  Program[]        @relation("PartnerPrograms")
+  inquiries PartnerInquiry[]
+  leads     PartnerLead[]
+  users     User[]           @relation("UserPartner")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, isVerified])
+  @@index([type])
+}
+
+// Partner Inquiry (Organizations wanting to post opportunities)
+model PartnerInquiry {
+  id               String   @id @default(cuid())
+  organizationName String
+  contactName      String
+  email            String
+  phone            String?
+  country          String? // ISO country code
+  website          String?
+  message          String   @db.Text
+  status           String   @default("PENDING") // PENDING, APPROVED, REJECTED, CONTACTED
+  adminNotes       String?  @db.Text
+  partnerId        String? // If approved and converted to Partner
+  partner          Partner? @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([partnerId])
+}
+
+// Partner Leads (Students who showed interest in Partner's programs)
+model PartnerLead {
+  id         String  @id @default(cuid())
+  partnerId  String
+  programId  String
+  userId     String? // If user is registered
+  name       String
+  email      String
+  profession String?
+  country    String? // Student's country
+  message    String? @db.Text
+  source     String  @default("PROGRAM_VIEW") // PROGRAM_VIEW, CONSULTATION, APPLICATION
+
+  partner Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user    User?   @relation("UserPartnerLeads", fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([partnerId, createdAt])
+  @@index([programId])
+}
+
+// Newsletter Subscribers
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  locale         String    @default("en") // Preferred language
+  isActive       Boolean   @default(true)
+  subscribedAt   DateTime  @default(now())
+  unsubscribedAt DateTime?
+
+  @@index([email])
+  @@index([isActive])
+}
+
+// FAQ System
+model FAQ {
+  id         String  @id @default(cuid())
+  question   String
+  questionRu String?
+  questionTj String?
+  answer     String  @db.Text
+  answerRu   String? @db.Text
+  answerTj   String? @db.Text
+  category   String? // "GENERAL", "APPLICATION", "SCHOLARSHIP", "VISA", etc.
+  order      Int     @default(0) // For sorting
+  isActive   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category, isActive])
+  @@index([order])
+}
+
+// How It Works Steps (Dynamic Wizard Steps)
+model HowItWorksStep {
+  id            String  @id @default(cuid())
+  stepNumber    Int     @unique // 1, 2, 3, etc.
+  title         String
+  titleRu       String?
+  titleTj       String?
+  description   String  @db.Text
+  descriptionRu String? @db.Text
+  descriptionTj String? @db.Text
+  icon          String? // Lucide icon name (e.g., "GraduationCap", "Globe", "BookOpen")
+  order         Int     @default(0) // For sorting
+  isActive      Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+  @@index([isActive])
+  @@index([stepNumber])
+}
+
+// Student Achievements (Success Wall) - Strict Trilingual System
+model Achievement {
+  id             String @id @default(cuid())
+  studentName    String // Usually same across all languages
+  universityName String // Usually same across all languages
+
+  // Country - Separate fields per language (REQUIRED)
+  countryTJ String
+  countryRU String
+  countryEN String
+
+  // Program Name - Separate fields per language (REQUIRED)
+  programNameTJ String
+  programNameRU String
+  programNameEN String
+
+  // Testimonial - Separate fields per language (REQUIRED)
+  testimonialTJ String @db.Text
+  testimonialRU String @db.Text
+  testimonialEN String @db.Text
+
+  studentImage String // Cloudinary URL (shared across all versions)
+  academicYear String // e.g., "2024-2025"
+  category     ProgramLevel // BACHELOR, MASTER, PHD
+  order        Int          @default(0) // For custom ordering
+  isActive     Boolean      @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
+  @@index([category])
+  @@index([academicYear])
+  @@index([order])
+}

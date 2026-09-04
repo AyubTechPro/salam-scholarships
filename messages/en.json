@@ -1,0 +1,475 @@
+{
+  "common": {
+    "home": "Home",
+    "opportunities": "Opportunities",
+    "events": "Events",
+    "consulting": "Consulting",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "search": "Search",
+    "filter": "Filter",
+    "apply": "Apply",
+    "learnMore": "Learn More",
+    "verified": "Verified",
+    "deadline": "Deadline",
+    "country": "Country",
+    "level": "Level",
+    "funding": "Funding",
+    "category": "Category",
+    "about": "About Us",
+    "aiAssistant": "AI Assistant",
+    "achievements": "Achievements",
+    "partners": "Partners",
+    "scholarships": "Scholarships",
+    "exchangePrograms": "Exchange Programs",
+    "forumsConferences": "Forums & Conferences",
+    "summerPrograms": "Summer Programs",
+    "internationalPrograms": "International Programs",
+    "readMore": "Read More",
+    "readLess": "Read Less",
+    "subscribe": "Subscribe",
+    "subscribed": "Thanks for subscribing!",
+    "loading": "Loading...",
+    "found_count": "Found {count} opportunities",
+    "similarOpportunities": "Similar Opportunities",
+    "notFound": {
+      "title": "Page Not Found",
+      "message": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+      "goHome": "Go to Homepage",
+      "goBack": "Go Back",
+      "contactSupport": "Contact Support",
+      "helpText": "If you believe this is an error, please contact our support team."
+    }
+  },
+  "hero": {
+    "title": "Discover Global Opportunities",
+    "subtitle": "Connect with scholarships, forums, and educational programs worldwide",
+    "searchPlaceholder": "Search opportunities...",
+    "cta": "Explore Opportunities"
+  },
+  "filters": {
+    "allLevels": "All Levels",
+    "allCountries": "All Countries",
+    "allFunding": "All Funding Types",
+    "allCategories": "All Categories",
+    "school": "School",
+    "bachelor": "Bachelor",
+    "master": "Master",
+    "phd": "PhD",
+    "full": "Full Funding",
+    "partial": "Partial Funding",
+    "scholarship": "Scholarship",
+    "forum": "Forum",
+    "summerSchool": "Summer School",
+    "conference": "Conference",
+    "noEnglishCert": "No IELTS/TOEFL Required"
+  },
+  "regions": {
+    "europe": "Europe",
+    "northAmerica": "North America",
+    "asia": "Asia",
+    "oceania": "Oceania"
+  },
+  "findMyPath": {
+    "badge": "Smart Discovery",
+    "title": "Find My Path",
+    "subtitle": "Tell us what you're looking for, and we'll show you the perfect opportunities",
+    "yourPerfectPath": "Your Perfect Path",
+    "category": "Category",
+    "region": "Region",
+    "level": "Level",
+    "findOpportunities": "Find Opportunities",
+    "startOver": "Start Over",
+    "countries": "countries"
+  },
+  "buttons": {
+    "discussTelegram": "Discuss Application on Telegram",
+    "visitOfficialWebsite": "Visit Official Website",
+    "registrationClosed": "Registration Closed"
+  },
+  "opportunityDetail": {
+    "needHelpTitle": "Need Help With This Application?",
+    "needHelpDescription": "Our experts can help you craft a winning application",
+    "successRate": "Success Rate",
+    "withOurHelp": "With Our Help",
+    "average": "Average",
+    "aboutThisOpportunity": "About This Opportunity",
+    "programTimeline": "Program Timeline",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "howToApply": "How to Apply",
+    "country": "Country",
+    "institution": "Institution",
+    "deadline": "Deadline",
+    "timeLeft": "Time Left",
+    "back": "Back",
+    "backToOpportunities": "Back to Opportunities",
+    "profileAnalysis": "Profile Analysis",
+    "applicationStrategy": "Application Strategy",
+    "documentReview": "Document Review",
+    "needProfessionalHelp": "Need Professional Help?",
+    "weWillRegister": "We Will Register For You",
+    "registrationClosedNotice": "Registration deadline has passed"
+  },
+  "home": {
+    "slider": {
+      "slide1": {
+        "title": "Welcome to Salam Scholarships",
+        "text": "Tajikistan's first educational consulting platform for international opportunities.",
+        "button": "Learn More"
+      },
+      "slide2": {
+        "title": "Path to Global Opportunities",
+        "text": "Introducing Salam Scholarships at international programs.",
+        "button": "Explore"
+      },
+      "slide3": {
+        "title": "Free Consultation",
+        "text": "Get expert guidance on your educational journey. Connect with our consultants via Telegram for personalized advice.",
+        "button": "Get Consultation"
+      },
+      "slide4": {
+        "title": "Forums and Summits",
+        "text": "Participation in forums and summits is a path to idea realization, development and international networking.",
+        "button": "Learn More"
+      }
+    },
+    "about": {
+      "badge": "About Us",
+      "title": "The Pioneer of Global Education in Tajikistan",
+      "text": "Salam Scholarships is not just an agency; it’s an ecosystem designed to launch the brightest minds into the world's most prestigious universities and global forums. Born out of a vision to bridge the gap between local talent and international opportunities, we provide end-to-end premium consulting that turns rejections into full-ride scholarships.\n\nOur approach is highly strategic, zero-friction, and profoundly personalized. We have engineered a revolutionary methodology that restructures a student's entire personal brand to meet Silicon Valley and Ivy League standards.",
+      "text1": "With over 2000+ successful consultations, we don't just fill out forms—we build profiles that stand out.",
+      "text2": "Our transparent tracking platform ensures that every applicant is securely guided from their first draft to their final admission letter, securing millions in funding."
+    },
+    "mission": {
+      "badge": "Our Mission",
+      "title": "Empowering the Next Generation of Global Leaders",
+      "text": "Our core mission is to eradicate borders from education. We believe that financial constraints and complex bureaucracy should never stand in the way of true potential. Salam Scholarships democratizes access to elite education, ensuring every talented individual has the strategic roadmap needed to claim their rightful place on the world stage."
+    },
+    "path": {
+      "title": "Our Path",
+      "text1": "Our path began with a dream - to connect Tajikistan's youth with global opportunities. Today we proudly note that many of our participants are already receiving funded scholarships and actively participating in international programs.",
+      "text2": "We always strive to work with responsibility and dedication, maintain transparency and trust, and create a friendly atmosphere for cooperation and development."
+    },
+    "team": {
+      "badge": "Our Team",
+      "title": "Our Team",
+      "description": "Meet the passionate professionals behind Salam Scholarships"
+    },
+    "success": {
+      "badge": "Student Success",
+      "title": "Success Stories",
+      "stats": {
+        "programs": "Verified Programs",
+        "countries": "Countries Reached",
+        "consultations": "Successful Consultations"
+      },
+      "emptyState": {
+        "title": "No Success Stories Yet",
+        "message": "We're working on collecting inspiring stories from our students. Check back soon!"
+      },
+      "keyToSuccess": "Key to Success:",
+      "viewFullStory": "View Full Story",
+      "close": "Close"
+    },
+    "globalReach": {
+      "badge": "Worldwide Platform",
+      "title": "Connecting Students from Around the Globe",
+      "description": "Join thousands of students from 50+ countries discovering opportunities worldwide",
+      "users": "Active Users",
+      "countries": "Countries Represented",
+      "programs": "Available Programs",
+      "destinations": "Destination Countries",
+      "cta": "View All Opportunities"
+    }
+  },
+  "metadata": {
+    "home": {
+      "title": "Salam Scholarships - Gateway to Global Education",
+      "description": "Tajikistan's #1 gateway for global education. Discover scholarships, exchange programs, forums, and summer schools worldwide."
+    },
+    "opportunities": {
+      "title": "Global Opportunities - Salam Scholarships",
+      "description": "Discover scholarships, exchange programs, forums, and summer schools worldwide. Find your perfect opportunity with Salam Scholarships.",
+      "noLanguageCert": "No Language Certificate Required"
+    },
+    "consulting": {
+      "title": "Free Consultation - Salam Scholarships",
+      "description": "Get expert guidance on your educational journey. Book a free consultation with our experienced advisors."
+    },
+    "dashboard": {
+      "title": "My Dashboard - Salam Scholarships",
+      "description": "Track your applications and manage your profile on Salam Scholarships platform."
+    },
+    "about": {
+      "title": "About Us - Salam Scholarships",
+      "description": "Learn about Salam Scholarships, Tajikistan's first educational consulting platform for global opportunities."
+    },
+    "achievements": {
+      "title": "Success Stories - Salam Scholarships",
+      "description": "Read inspiring success stories from students who achieved their dreams with Salam Scholarships."
+    },
+    "terms": {
+      "title": "Terms of Service - Salam Scholarships",
+      "description": "Read the Terms of Service for using Salam Scholarships."
+    },
+    "privacy": {
+      "title": "Privacy Policy - Salam Scholarships",
+      "description": "Learn how we protect your privacy and handle your data on Salam Scholarships."
+    },
+    "contact": {
+      "title": "Contact Us - Salam Scholarships",
+      "description": "Get in touch with Salam Scholarships. We are here to help you with your educational journey."
+    },
+    "partners": {
+      "title": "Our Partners - Salam Scholarships",
+      "description": "Meet our trusted partners in global education."
+    }
+  },
+  "dashboard": {
+    "title": "My Profile",
+    "subtitle": "Your professional identity on Salam Scholarships",
+    "profile": {
+      "title": "Profile",
+      "edit": "Edit Profile",
+      "save": "Save Changes",
+      "cancel": "Cancel",
+      "name": "First Name",
+      "surname": "Last Name",
+      "profession": "Profession",
+      "city": "City",
+      "country": "Country",
+      "educationPlace": "University/School",
+      "languageLevel": "Language Level",
+      "telegramOrPhone": "Telegram or Phone",
+      "bio": "Bio",
+      "updateSuccess": "Profile updated successfully",
+      "updateError": "Failed to update profile",
+      "telegram": {
+        "title": "Connect on Telegram",
+        "description": "Add your Telegram username or phone number to connect with our team",
+        "button": "Open Chat in Telegram",
+        "placeholder": "@username or phone number"
+      }
+    },
+    "documents": {
+      "title": "Document Vault",
+      "subtitle": "Upload and manage your documents",
+      "upload": "Upload Document",
+      "dragDrop": "Drag and drop files here, or click to select",
+      "cv": "CV / Resume",
+      "passport": "Passport",
+      "transcript": "Transcript",
+      "certificate": "Certificate",
+      "other": "Other",
+      "uploadSuccess": "Document uploaded successfully",
+      "uploadError": "Failed to upload document",
+      "noDocuments": "No documents uploaded yet",
+      "fileName": "File Name",
+      "uploadedAt": "Uploaded",
+      "verified": "Verified",
+      "notVerified": "Not Verified"
+    },
+    "applications": {
+      "title": "My Applications",
+      "noApplications": "You haven't applied to any programs yet.",
+      "explore": "Explore Opportunities",
+      "status": {
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "underReview": "Under Review",
+        "accepted": "Accepted",
+        "rejected": "Rejected"
+      },
+      "applied": "Applied",
+      "submitted": "Submitted",
+      "deadline": "Deadline"
+    },
+    "saved": {
+      "title": "Saved Programs",
+      "noSaved": "You haven't saved any programs yet.",
+      "browse": "Browse Opportunities",
+      "remove": "Remove"
+    },
+    "stats": {
+      "applications": "My Applications",
+      "saved": "Saved Opportunities",
+      "aiScore": "AI Readiness Score",
+      "events": "Upcoming Events"
+    },
+    "roadmap": {
+      "title": "Success Roadmap",
+      "subtitle": "Steps to reach your goal",
+      "completed": "All steps completed!",
+      "steps": {
+        "profile": "Complete Profile",
+        "telegram": "Connect Telegram",
+        "firstSave": "First Save",
+        "application": "First Application"
+      }
+    },
+    "learning": {
+      "title": "Learning Hub",
+      "subtitle": "Educational videos for professional development",
+      "noVideos": "No videos available yet",
+      "viewAll": "View All"
+    },
+    "verified": "Verified User",
+    "location": "Location",
+    "education": "Education",
+    "language": "Language Level"
+  },
+  "admin": {
+    "adminPanel": "Admin Panel",
+    "navigation": "Navigation",
+    "dashboard": "Dashboard",
+    "programs": "Programs",
+    "programsAll": "All Programs",
+    "programsCreate": "Create Program",
+    "applications": "Applications",
+    "users": "Users",
+    "usersAll": "All Users",
+    "usersLeads": "Leads",
+    "events": "Events",
+    "seminars": "Seminars",
+    "successStories": "Success Stories",
+    "analytics": "Analytics",
+    "consultationRequests": "Consultation Requests",
+    "notifications": "Notifications",
+    "team": "Team Management",
+    "auditLogs": "Audit Logs",
+    "settings": "Settings",
+    "documents": "Student Documents"
+  },
+  "contact": {
+    "header": {
+      "badge": "Get in Touch",
+      "title": "Contact Us",
+      "subtitle": "Have questions? We're here to help you on your educational journey."
+    },
+    "info": {
+      "email": {
+        "label": "Email"
+      },
+      "phone": {
+        "label": "Phone"
+      },
+      "address": {
+        "label": "Address",
+        "value": "Dushanbe, Tajikistan\n(Office address will be updated)"
+      }
+    },
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "phoneHint": "Optional",
+      "phoneExample": "Example: +998901234567, +1234567890, +81-90-1234-5678",
+      "phoneInvalid": "Please enter a valid international phone number",
+      "subject": "Subject",
+      "message": "Your Message",
+      "submit": "Send Message",
+      "sending": "Sending...",
+      "submitError": "Failed to send message. Please try again.",
+      "success": {
+        "title": "Message Sent!",
+        "message": "Thank you for contacting us. We will get back to you within 24-48 hours."
+      }
+    }
+  },
+  "consulting": {
+    "badge": "Expert Consultation",
+    "title": "Need Help With Your Application?",
+    "description": "Our expert advisors will analyze your profile and provide personalized guidance to maximize your chances of success.",
+    "form": {
+      "name": "Full Name *",
+      "namePlaceholder": "John Doe",
+      "email": "Email Address *",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+998901234567",
+      "gpa": "Current GPA",
+      "gpaPlaceholder": "Select GPA range",
+      "englishLevel": "English Level",
+      "englishLevelPlaceholder": "Select your level",
+      "targetCountry": "Target Country",
+      "targetCountryPlaceholder": "Select country",
+      "targetLevel": "Target Education Level",
+      "targetLevelPlaceholder": "Select level",
+      "message": "Additional Message",
+      "messagePlaceholder": "Tell us about your goals, concerns, or questions...",
+      "submit": "Get Free Consultation",
+      "submitting": "Submitting...",
+      "success": {
+        "title": "Request Submitted!",
+        "message": "Thank you for your interest! Our team will contact you within 24-48 hours to schedule your free consultation."
+      },
+      "error": "Failed to submit request. Please try again."
+    },
+    "levels": {
+      "beginner": "Beginner (A1-A2)",
+      "intermediate": "Intermediate (B1-B2)",
+      "advanced": "Advanced (C1-C2)",
+      "native": "Native / Fluent"
+    },
+    "benefits": {
+      "title": "Why Choose Us?",
+      "expertAnalysis": {
+        "title": "Expert Analysis",
+        "description": "Professional evaluation of your profile and application strategy"
+      },
+      "personalized": {
+        "title": "Personalized Guidance",
+        "description": "Tailored advice based on your academic background and goals"
+      },
+      "global": {
+        "title": "Global Opportunities",
+        "description": "Access to our network of verified international programs"
+      },
+      "success": {
+        "title": "Success Guarantee",
+        "description": "Proven track record with 2000+ successful consultations"
+      }
+    },
+    "responseTime": {
+      "title": "Response Time",
+      "description": "We typically respond within 24-48 hours during business days.",
+      "feature1": "Professional analysis",
+      "feature2": "Personalized recommendations",
+      "feature3": "Application strategy",
+      "feature4": "Follow-up support"
+    }
+  },
+  "founder": {
+    "badge": "Global Recognition",
+    "title": "Global Ambassador of Education",
+    "subtitle": "Representing Tajikistan on the world stage",
+    "founderLabel": "Founder & Visionary",
+    "achievementTitle": "Satyarthi Summer School 2025",
+    "achievementText": "Founder of Salam Scholarships, Abdurahmonbek Akhmedov, was honored at the closing ceremony of Satyarthi Summer School 2025, held in New Delhi, India. This event was organized by Satyarthi Movement for Global Compassion, an initiative of Nobel Laureate Kailash Satyarthi.",
+    "representingTitle": "Representing Tajikistan",
+    "representingText": "Abdurahmonbek proudly represented Tajikistan and the Salam Scholarships platform at this prestigious international forum, demonstrating commitment to global education and youth development.",
+    "quote": "Building bridges between Tajikistan's youth and global opportunities is not just our mission—it's our commitment to transforming lives.",
+    "quoteAuthor": "— Abdurahmonbek Akhmedov",
+    "location": "New Delhi, India",
+    "nobelInitiative": "NOBEL INITIATIVE",
+    "satyarthiMovement": "Satyarthi Movement for Global Compassion"
+  },
+  "ai": {
+    "title": "Salam Scholarships AI Assistant",
+    "subtitle": "Your smart guide to scholarships and study abroad — ask anything",
+    "greeting": "How can I help you today?",
+    "hint": "Ask about scholarships, applications, documents, or study abroad. I respond in your language.",
+    "suggestions": {
+      "s1": "What documents do I need for scholarship applications?",
+      "s2": "How to write a strong motivation letter?",
+      "s3": "Which countries offer full scholarships for Master's?",
+      "s4": "Tips for preparing for study abroad"
+    },
+    "placeholder": "Ask your question...",
+    "thinking": "Thinking...",
+    "metaTitle": "AI Assistant - Salam Scholarships",
+    "metaDescription": "Get instant help with scholarships, applications, and study abroad from Salam Scholarships AI."
+  }
+}
