@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const prisma = new PrismaClient();
 
-export default async function ApplicationsPage() {
+export default async function ApplicationsPage({ params: { locale } }: { params: { locale: string } }) {
   const applications = await prisma.application.findMany({
     orderBy: { createdAt: "desc" },
     include: {

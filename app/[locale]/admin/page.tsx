@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 
 const prisma = new PrismaClient();
 
@@ -108,9 +109,9 @@ export default async function AdminDashboardPage({ params: { locale } }: { param
                     <tr key={app.id} className="hover:bg-[#111] transition-colors">
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-6 h-6 rounded-full bg-[#222] flex items-center justify-center overflow-hidden border border-[#333]">
+                          <div className="w-6 h-6 rounded-full bg-[#222] flex items-center justify-center overflow-hidden border border-[#333] relative">
                             {app.user.image ? (
-                              <img src={app.user.image} alt={app.user.name || "User"} className="w-full h-full object-cover" />
+                              <ImageWithFallback src={app.user.image} alt={app.user.name || "User"} fill className="object-cover" />
                             ) : (
                               <span className="text-[10px] font-medium text-[#888]">
                                 {app.user.name?.charAt(0) || "U"}

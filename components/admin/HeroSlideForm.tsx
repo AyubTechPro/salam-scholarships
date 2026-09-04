@@ -6,6 +6,7 @@ import { uploadImageAction } from "@/app/actions/upload";
 import { Save, ArrowLeft, Loader2, Image as ImageIcon, UploadCloud } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 
 export default function HeroSlideForm({ locale, initialData }: { locale: string, initialData?: any }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -107,7 +108,7 @@ export default function HeroSlideForm({ locale, initialData }: { locale: string,
             
             {imageUrl ? (
               <div className="relative w-full h-64 rounded-xl overflow-hidden border border-white/10 group">
-                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                <ImageWithFallback src={imageUrl} alt="Preview" fill className="object-cover" />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button 
                     type="button" 

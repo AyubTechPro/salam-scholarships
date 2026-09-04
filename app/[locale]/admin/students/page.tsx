@@ -1,10 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { User, Mail, Calendar, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 
 const prisma = new PrismaClient();
 
-export default async function StudentsPage() {
+export default async function StudentsPage({ params: { locale } }: { params: { locale: string } }) {
   const students = await prisma.user.findMany({
     where: { role: "USER" },
     orderBy: { createdAt: "desc" }
@@ -48,9 +49,9 @@ export default async function StudentsPage() {
                   <tr key={student.id} className="hover:bg-[#111] transition-colors group">
                     <td className="px-5 py-4 align-top">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#1a1a1a] border border-[#333] flex items-center justify-center shrink-0 overflow-hidden">
+                        <div className="w-8 h-8 rounded-full bg-[#1a1a1a] border border-[#333] flex items-center justify-center shrink-0 overflow-hidden relative">
                           {student.image ? (
-                            <img src={student.image} alt={student.name || "User"} className="w-full h-full object-cover" />
+                            <ImageWithFallback src={student.image} alt={student.name || "User"} fill className="object-cover" />
                           ) : (
                             <span className="text-xs font-medium text-[#888]">
                               {student.name?.charAt(0) || "U"}

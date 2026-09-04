@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Plus, Edit, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { deleteHeroSlide } from "@/app/actions/admin";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 
 const prisma = new PrismaClient();
 
@@ -44,7 +45,7 @@ export default async function HeroSliderPage({ params: { locale } }: { params: {
             <div key={slide.id} className="bg-[#0A0A0A] border border-[#222] rounded-xl overflow-hidden group">
               <div className="h-48 relative overflow-hidden bg-[#111] flex items-center justify-center">
                 {slide.imageUrl ? (
-                  <img src={slide.imageUrl} alt={slide.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <ImageWithFallback src={slide.imageUrl} alt={slide.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
                   <ImageIcon className="w-12 h-12 text-gray-700" />
                 )}

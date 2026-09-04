@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, X, Loader2 } from "lucide-react";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
-import { uploadImage } from "@/app/actions/upload";
+import { uploadImageAction } from "@/app/actions/upload";
 
 export default function SuccessStoryForm({ 
   initialData, 
@@ -34,8 +34,12 @@ export default function SuccessStoryForm({
       const formData = new FormData();
       formData.append("file", file);
       
-      const url = await uploadImage(formData);
-      setFormData(prev => ({ ...prev, photoUrl: url }));
+      const res = await uploadImageAction(formData);
+      if (res.success && res.url) {
+        setFormData(prev => ({ ...prev, photoUrl: res.url }));
+      } else {
+        throw new Error(res.error || "Upload failed");
+      }
     } catch (error) {
       console.error("Upload failed:", error);
       alert("Failed to upload image.");

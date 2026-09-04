@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const prisma = new PrismaClient();
 
-export default async function ConsultationsPage() {
+export default async function ConsultationsPage({ params: { locale } }: { params: { locale: string } }) {
   const consultations = await prisma.consultationRequest.findMany({
     orderBy: { createdAt: "desc" }
   });
