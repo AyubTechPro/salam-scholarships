@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Plus, Edit, Award, Quote } from "lucide-react";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { deleteSuccessStory } from "@/app/actions/admin";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 
 const prisma = new PrismaClient();
 
@@ -44,7 +45,7 @@ export default async function SuccessStoriesPage({ params: { locale } }: { param
             <div key={story.id} className="bg-[#0A0A0A] border border-[#222] rounded-xl overflow-hidden group">
               <div className="h-48 relative overflow-hidden bg-[#111]">
                 {story.photoUrl ? (
-                  <img src={story.photoUrl} alt={story.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <ImageWithFallback src={story.photoUrl} alt={story.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-500">
                     No Image

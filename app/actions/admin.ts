@@ -202,3 +202,30 @@ export async function updateHeroSlide(id: string, formData: FormData, locale: st
   revalidatePath(`/${locale}`);
   redirect(`/${locale}/admin/hero-slider`);
 }
+
+export async function updateApplicationStatus(id: string, status: any, paymentStatus: string) {
+  const session = await getServerSession(authOptions);
+  checkAuth(session);
+  await prisma.application.update({
+    where: { id },
+    data: { status, paymentStatus }
+  });
+}
+
+export async function updateConsultationStatus(id: string, status: any, internalNotes: string) {
+  const session = await getServerSession(authOptions);
+  checkAuth(session);
+  await prisma.consultationRequest.update({
+    where: { id },
+    data: { status, internalNotes }
+  });
+}
+
+export async function updateStudentCRMStatus(id: string, crmStatus: string, internalNotes: string) {
+  const session = await getServerSession(authOptions);
+  checkAuth(session);
+  await prisma.user.update({
+    where: { id },
+    data: { crmStatus, internalNotes }
+  });
+}

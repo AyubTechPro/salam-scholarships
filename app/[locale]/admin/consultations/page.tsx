@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Mail, Phone, Calendar, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
 
 const prisma = new PrismaClient();
 
@@ -29,7 +30,10 @@ export default async function ConsultationsPage() {
               <div className="flex-1 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold text-white">{req.name}</h3>
-                  <StatusBadge status={req.status} />
+                  <div className="flex items-center gap-3">
+                    <StatusBadge status={req.status} />
+                    <Link href={`/${locale}/admin/consultations/${req.id}`} className="text-xs text-brand-gold hover:underline">View Details</Link>
+                  </div>
                 </div>
                 
                 <div className="flex flex-wrap gap-4 text-xs text-[#888]">

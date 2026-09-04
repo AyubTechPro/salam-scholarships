@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { User, Eye, Globe, Mail, Phone, Calendar } from "lucide-react";
+import Link from "next/link";
 
 const prisma = new PrismaClient();
 
@@ -89,9 +90,9 @@ export default async function ApplicationsPage() {
                         {new Date(app.createdAt).toLocaleDateString()}
                       </div>
                       <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="inline-flex items-center gap-1 px-2 py-1 bg-[#111] hover:bg-[#222] text-[#EDEDED] text-[10px] rounded transition-colors border border-[#333]">
+                        <Link href={`/${locale}/admin/applications/${app.id}`} className="inline-flex items-center gap-1 px-2 py-1 bg-[#111] hover:bg-[#222] text-[#EDEDED] text-[10px] rounded transition-colors border border-[#333]">
                           <Eye className="w-3 h-3" /> View Details
-                        </button>
+                        </Link>
                       </div>
                     </td>
                   </tr>
