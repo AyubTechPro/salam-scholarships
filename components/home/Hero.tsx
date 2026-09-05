@@ -83,12 +83,12 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
             </div>
           </motion.div>
 
-          {/* Dynamic Typewriter Subtitle */}
+          {/* Dynamic Subtitle - Authoritative */}
           <motion.p
             initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
-            className="text-xl md:text-3xl text-white/80 font-medium mb-12 max-w-4xl mx-auto tracking-wide leading-relaxed"
+            className="text-lg md:text-2xl text-white/70 font-medium mb-12 max-w-4xl mx-auto tracking-wide leading-relaxed"
           >
             {initialSlide && (initialSlide.subtitle || initialSlide.subtitleRu || initialSlide.subtitleTj) ? (
               <>
@@ -99,15 +99,15 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
             ) : (
               locale === 'tj' ? (
                 <>
-                  Имкониятҳоро барои <TypewriterHeadline /> ёбед
+                  Инфрасохтори ягона барои таҳсили байналмилалӣ.
                 </>
               ) : locale === 'ru' ? (
                 <>
-                  Найдите возможности для <TypewriterHeadline />
+                  Единая инфраструктура для международного образования.
                 </>
               ) : (
                 <>
-                  Find opportunities for <TypewriterHeadline />
+                  The unified infrastructure for international education.
                 </>
               )
             )}
@@ -176,10 +176,10 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
                 }}
                 placeholder={
                   locale === 'tj'
-                    ? 'Ҷустуҷӯи магии... (масалан: "Стипендияи IT дар Германия")'
+                    ? 'Ҷустуҷӯ дар пойгоҳи додаҳо (масалан: Барномаҳои IT, Олмон)'
                     : locale === 'ru'
-                    ? 'Волшебный поиск... (например: "Стипендия IT в Германии")'
-                    : 'Magic Search... (e.g., "Find me a scholarship in Germany")'
+                    ? 'Поиск по базе данных (например: IT программы, Германия)'
+                    : 'Search the database (e.g., IT programs in Germany)'
                 }
                 className="w-full pl-16 pr-48 py-7 rounded-3xl text-white text-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/70 bg-white/10 border border-white/20 backdrop-blur-2xl placeholder-white/40 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-white/15 focus:bg-white/20 hover:border-brand-gold/50"
               />
@@ -247,8 +247,8 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="flex flex-wrap items-center justify-center gap-3 mt-8 mb-16 max-w-3xl mx-auto"
           >
-            <span className="text-white/50 text-sm font-medium mr-2">
-              {locale === 'tj' ? 'Маъмултарин:' : locale === 'ru' ? 'Популярно:' : 'Trending:'}
+            <span className="text-white/40 text-sm font-medium mr-2 tracking-wide uppercase">
+              {locale === 'tj' ? 'Филтрҳои зуд:' : locale === 'ru' ? 'Быстрые фильтры:' : 'Quick Filters:'}
             </span>
             {[
               { id: 'it-germany', icon: '💻', textEn: 'IT in Germany', textRu: 'IT в Германии', textTj: 'IT дар Олмон' },

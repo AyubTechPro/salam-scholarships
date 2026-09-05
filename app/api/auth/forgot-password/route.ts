@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://salamconsulting.com';
     const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
 
-    // Send password reset email (try DB template first, fallback to hardcoded)
+    // Send password reset email (try DB template first, fallback to standard default)
     const locale = request.headers.get('x-locale') || 'en';
     const dbEmail = await getFormattedEmail('PASSWORD_RESET', {
       name: user.name || 'User',
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
         text: dbEmail.text,
       });
     } else {
-      // Fallback to hardcoded template
+      // Fallback to standard default template
       const emailTemplate = getPasswordResetEmail({
         name: user.name || 'User',
         resetLink,

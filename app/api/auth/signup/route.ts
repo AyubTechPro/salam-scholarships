@@ -37,7 +37,7 @@ async function sendOTPEmail(email: string, otp: string, name: string, locale: st
       text: emailContent.text,
     });
   } else {
-    // Fallback to hardcoded template if DB template not found
+    // Fallback to standard default template if DB template not found
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: parseInt(process.env.SMTP_PORT || '587'),

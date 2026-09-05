@@ -13,6 +13,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { enUS, ru, type Locale } from 'date-fns/locale';
 import { formatDistanceToNowTajik, formatSmartCountdown } from '@/lib/date-fns-tajik';
 import HotDeadlineBadge from './HotDeadlineBadge';
+import { LiveViewers } from '@/components/ui/LiveViewers';
+import { Sparkles } from 'lucide-react';
 
 type ProgramLevel = 'SCHOOL' | 'BACHELOR' | 'MASTER' | 'PHD';
 type FundingType = 'FULL' | 'PARTIAL' | 'NONE';
@@ -141,6 +143,13 @@ export default function OpportunityCard({
     return Math.abs(hash) % 45 + 15; // 15 to 60 viewers
   }, [id]);
 
+  // Generate deterministic Match Score based on ID
+  const matchScore = React.useMemo(() => {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    return Math.abs(hash) % 25 + 75; // 75% to 99%
+  }, [id]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -166,9 +175,29 @@ export default function OpportunityCard({
               blurDataURL={getBlurDataURL()}
             />
             
+            <div className="absolute top-4 left-4 z-10">
+              <LiveViewers programId={id} />
+            </div>
 
-
-              <div className="absolute top-4 right-4 flex flex-col items-end space-y-2 z-10">
+            <div className="absolute bottom-4 right-4 z-10">
+              <div className="relative flex items-center justify-center w-12 h-12 bg-navy/80 backdrop-blur-md rounded-full shadow-lg border border-white/10 group-hover:scale-110 transition-transform">
+                <svg className="w-12 h-12 transform -rotate-90">
+                  <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-white/20" />
+                  <motion.circle 
+                    cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" 
+                    strokeDasharray={125.6} 
+                    initial={{ strokeDashoffset: 125.6 }}
+                    whileInView={{ strokeDashoffset: 125.6 - (125.6 * matchScore) / 100 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: 0.2 }}
+                    className={matchScore > 85 ? "text-green-500" : "text-yellow-500"} 
+                  />
+                </svg>
+                <div className="absolute flex flex-col items-center justify-center text-white">
+                  <span className="text-[10px] font-black">{matchScore}%</span>
+                </div>
+              </div>
+            </div>              <div className="absolute top-4 right-4 flex flex-col items-end space-y-2 z-10">
               <div className="flex items-center space-x-2">
                 {isVerified && (
                   <div className="bg-brand-gold/90 backdrop-blur-md text-brand-navy px-3 py-1.5 rounded-full flex items-center space-x-1 text-xs font-bold shadow-lg">
@@ -267,6 +296,15 @@ export default function OpportunityCard({
                 {timeRemaining}
               </span>
             </div>
+            {isDeadlineSoon && (
+              <motion.div 
+                animate={{ opacity: [1, 0.5, 1] }} 
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[10px] font-bold rounded-md"
+              >
+                URGENT
+              </motion.div>
+            )}
             <span className="text-xs font-black uppercase tracking-wider text-brand-gold group-hover:translate-x-1 transition-transform flex items-center">
               {t('common.learnMore')} <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </span>

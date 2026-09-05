@@ -47,7 +47,8 @@
     "title": "Discover Global Opportunities",
     "subtitle": "Connect with scholarships, forums, and educational programs worldwide",
     "searchPlaceholder": "Search opportunities...",
-    "cta": "Explore Opportunities"
+    "cta": "Explore Opportunities",
+    "noOpportunities": "No opportunities found matching your filters."
   },
   "filters": {
     "allLevels": "All Levels",

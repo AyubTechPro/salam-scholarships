@@ -74,15 +74,25 @@ export async function GET(request: NextRequest) {
 
     if (category) {
       // Map common slugs to DB enums if necessary
-      let mappedCategory = category.toUpperCase();
-      if (mappedCategory === 'SUMMER') mappedCategory = 'SUMMER_SCHOOL';
-      if (mappedCategory === 'SCHOLARSHIPS') mappedCategory = 'SCHOLARSHIP';
-      if (mappedCategory === 'FORUMS') mappedCategory = 'FORUM';
-      if (mappedCategory === 'EXCHANGES') mappedCategory = 'EXCHANGE';
-      if (mappedCategory === 'FELLOWSHIPS') mappedCategory = 'FELLOWSHIP';
-      if (mappedCategory === 'COMPETITIONS') mappedCategory = 'COMPETITION';
-      
-      where.category = mappedCategory;
+      if (category === 'summer-programs') {
+        where.category = 'SUMMER_SCHOOL';
+      } else if (category === 'scholarships') {
+        where.category = 'SCHOLARSHIP';
+      } else if (category === 'exchange-programs') {
+        where.category = 'EXCHANGE';
+      } else if (category === 'forums-conferences') {
+        where.category = { in: ['FORUM', 'CONFERENCE'] };
+      } else {
+        let mappedCategory = category.toUpperCase();
+        if (mappedCategory === 'SUMMER') mappedCategory = 'SUMMER_SCHOOL';
+        if (mappedCategory === 'SCHOLARSHIPS') mappedCategory = 'SCHOLARSHIP';
+        if (mappedCategory === 'FORUMS') mappedCategory = 'FORUM';
+        if (mappedCategory === 'EXCHANGES') mappedCategory = 'EXCHANGE';
+        if (mappedCategory === 'FELLOWSHIPS') mappedCategory = 'FELLOWSHIP';
+        if (mappedCategory === 'COMPETITIONS') mappedCategory = 'COMPETITION';
+        
+        where.category = mappedCategory;
+      }
     }
 
     if (fundingType) {

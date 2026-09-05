@@ -2,7 +2,7 @@
 
 import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Award, CheckCircle2, Clock, Globe, GraduationCap, ExternalLink, ArrowLeft, MessageCircle, ShieldCheck, XCircle, AlertCircle, Zap, TrendingUp, Send, Loader2, BrainCircuit } from 'lucide-react';
+import { Calendar, MapPin, Award, CheckCircle2, Clock, Globe, GraduationCap, ExternalLink, ArrowLeft, MessageCircle, ShieldCheck, XCircle, AlertCircle, Zap, TrendingUp, Send, Loader2, BrainCircuit, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import Image from '@/components/common/ImageWithFallback';
 import { getBlurDataURL, getSafeImageUrl } from '@/lib/image-utils';
@@ -17,6 +17,7 @@ import { useScopedTranslation } from '@/lib/scoped-translation-client';
 import ApplicationForm from './ApplicationForm';
 import ApplicationSuccessModal from './ApplicationSuccessModal';
 import { useSession } from 'next-auth/react';
+import { DFYApplyModal } from './DFYApplyModal';
 
 type Program = {
   id: string;
@@ -310,6 +311,7 @@ export default function OpportunityDetail({ opportunity, locale: propLocale }: {
   const { data: session } = useSession();
   const [showConsultationForm, setShowConsultationForm] = useState(false);
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [isDfyModalOpen, setIsDfyModalOpen] = useState(false);
   const [applicationSuccess, setApplicationSuccess] = useState<{
     applicationId: string;
     telegramUrl: string;
@@ -648,8 +650,8 @@ export default function OpportunityDetail({ opportunity, locale: propLocale }: {
 
                 {/* Title */}
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl font-heading font-bold mb-2 text-gold">
-                    Машварати касбӣ гиред
+                  <h3 className="text-xl font-heading font-bold mb-2 text-gold">
+                    Идоракунии Дархост
                   </h3>
                   <p className="text-gray-300 text-sm">
                     {needHelpDescription}
@@ -672,21 +674,60 @@ export default function OpportunityDetail({ opportunity, locale: propLocale }: {
                   </div>
                 </div>
 
-                {/* Single Lead Gen Action */}
-                <button
-                  onClick={() => {
-                    const message = locale === 'tj'
-                      ? encodeURIComponent(`Салом! Ман мехоҳам дар бораи ин барнома машварат гирам:\n\n${title}`)
-                      : locale === 'ru'
-                      ? encodeURIComponent(`Здравствуйте! Я хотел бы получить консультацию по этой программе:\n\n${title}`)
-                      : encodeURIComponent(`Hello! I would like to get a consultation for this program:\n\n${title}`);
-                    window.open(`https://t.me/${telegramSupportUsername}?start=${message}`, '_blank');
-                  }}
-                  className="w-full bg-gradient-to-r from-[#eab308] via-[#facc15] to-[#eab308] text-[#020617] px-6 py-4 rounded-xl font-bold text-lg hover:shadow-[0_0_25px_rgba(234,179,8,0.5)] transition-all duration-300 hover:scale-[1.02] flex items-center justify-center space-x-2"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span>{locale === 'tj' ? 'Дарёфти Машварат' : locale === 'ru' ? 'Получить консультацию' : 'Get Consultation'}</span>
-                </button>
+                {/* Dual Call-to-Action Buttons */}
+                <div className="flex flex-col space-y-4">
+                  <button
+                    onClick={() => setIsDfyModalOpen(true)}
+                    className="relative w-full group overflow-hidden rounded-2xl bg-gradient-to-b from-[#eab308] to-[#a16207] p-[1px] hover:shadow-[0_0_40px_rgba(234,179,8,0.4)] transition-all duration-500 transform hover:-translate-y-0.5"
+                  >
+                    {/* Animated Shine Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/40 to-white/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                    
+                    <div className="relative flex items-center justify-center space-x-2 bg-gradient-to-b from-[#facc15] to-[#eab308] px-6 py-4 rounded-[15px] text-[#020617] font-black text-lg shadow-inner">
+                      <Sparkles className="w-5 h-5 text-[#020617]" />
+                      <span>
+                        {locale === 'tj' ? 'Оғози Раванди Идорашаванда' : locale === 'ru' ? 'Начать управляемый процесс' : 'Start Managed Process'}
+                      </span>
+                    </div>
+                  </button>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => {
+                        const message = locale === 'tj'
+                          ? encodeURIComponent(`Салом! Ман мехоҳам дар бораи ин барнома машварат гирам:\n\n${title}`)
+                          : locale === 'ru'
+                          ? encodeURIComponent(`Здравствуйте! Я хотел бы получить консультацию по этой программе:\n\n${title}`)
+                          : encodeURIComponent(`Hello! I would like to get a consultation for this program:\n\n${title}`);
+                        window.open(`https://t.me/${telegramSupportUsername}?start=${message}`, '_blank');
+                      }}
+                      className="w-full bg-white/5 border border-white/10 text-white px-4 py-3 rounded-xl font-semibold text-sm hover:bg-white/10 transition-all flex items-center justify-center space-x-2"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>{locale === 'tj' ? 'Тамос бо коршинос' : 'Связаться с экспертом'}</span>
+                    </button>
+
+                    {opportunity.officialWebsiteUrl || opportunity.websiteUrl ? (
+                      <Link
+                        href={opportunity.officialWebsiteUrl || opportunity.websiteUrl || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-white/5 border border-white/10 text-gray-300 px-4 py-3 rounded-xl font-semibold text-sm hover:bg-white/10 hover:text-white transition-all flex items-center justify-center space-x-2"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        <span>{locale === 'tj' ? 'Мустақилона' : 'Самостоятельно'}</span>
+                      </Link>
+                    ) : (
+                      <button
+                        disabled
+                        className="w-full bg-white/5 border border-white/10 text-gray-500 px-4 py-3 rounded-xl font-semibold text-sm cursor-not-allowed flex items-center justify-center space-x-2"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        <span>{locale === 'tj' ? 'Мустақилона' : 'Самостоятельно'}</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
 
                 {/* Success Stats */}
                 <div className="mt-8 pt-8 border-t border-white/10">
@@ -775,6 +816,14 @@ export default function OpportunityDetail({ opportunity, locale: propLocale }: {
           <span>{locale === 'tj' ? 'Машварат' : locale === 'ru' ? 'Консультация' : 'Consultation'}</span>
         </button>
       </div>
+
+      {/* Premium DFY Modal */}
+      <DFYApplyModal 
+        isOpen={isDfyModalOpen}
+        onClose={() => setIsDfyModalOpen(false)}
+        programId={opportunity.id}
+        programTitle={title}
+      />
     </div>
   );
 }

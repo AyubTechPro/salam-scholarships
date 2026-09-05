@@ -1,4 +1,5 @@
 import Hero from '@/components/home/Hero';
+import InfrastructureSection from '@/components/home/InfrastructureSection';
 import TrustBar from '@/components/home/TrustBar';
 import DeadlineCountdownTicker from '@/components/home/DeadlineCountdownTicker';
 import HowItWorks from '@/components/home/HowItWorks';
@@ -50,6 +51,9 @@ export default async function HomePage({ params }: { params: { locale: string } 
     <div className="w-full">
       {/* Simplified Hero with Quick Search */}
       <Hero initialSlide={mainSlide} />
+
+      {/* Infrastructure Process */}
+      <InfrastructureSection />
 
       {/* Trust Bar (Stats) */}
       <TrustBar />
