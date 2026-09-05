@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import Image from '@/components/common/ImageWithFallback';
+import NextImage from 'next/image';
 import { useEffect, useState } from 'react';
 
 interface SiteSettings {
@@ -10,109 +10,108 @@ interface SiteSettings {
   logoDarkUrl?: string | null;
 }
 
+type LogoSize = 'sm' | 'md' | 'lg' | 'xl';
+
 type LogoProps = {
   showTagline?: boolean;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'light' | 'dark' | 'auto'; // Force light/dark or auto-detect from theme
+  size?: LogoSize;
+  variant?: 'light' | 'dark' | 'auto';
 };
 
-/** Returns true if the URL is from DB/storage or public directory */
-function isConfiguredLogoUrl(url: string | null): boolean {
+const sizeConfig: Record<LogoSize, { width: number; height: number }> = {
+  sm: { width: 148, height: 38 },
+  md: { width: 188, height: 48 },
+  lg: { width: 240, height: 62 },
+  xl: { width: 300, height: 77 },
+};
+
+function isValidLogoUrl(url: string | null | undefined): boolean {
   if (!url) return false;
-  return url.startsWith('http') || url.startsWith('/upload') || url.startsWith('/api/') || url.startsWith('/logo/');
+  return (
+    url.startsWith('http://') ||
+    url.startsWith('https://') ||
+    url.startsWith('/upload') ||
+    url.startsWith('/api/') ||
+    url.startsWith('/logo/')
+  );
 }
 
 /**
- * Logo Component - Uses SiteSettings from DB when available
- * Falls back to text when no logo images are configured (avoids 404s)
+ * Logo Component - Professional quality
+ * DB logo > bundled default. Never shows broken image icons.
  */
-export default function Logo({ showTagline = false, className = '', size = 'md', variant = 'auto' }: LogoProps) {
-  const { theme, resolvedTheme } = useTheme();
+export default function Logo({
+  showTagline = false,
+  className = '',
+  size = 'md',
+  variant = 'auto',
+}: LogoProps) {
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
 
   useEffect(() => {
     setMounted(true);
-
     if (variant === 'dark') {
       setIsDark(true);
     } else if (variant === 'light') {
       setIsDark(false);
     } else {
-      setIsDark(resolvedTheme === 'dark' || theme === 'dark');
+      setIsDark(resolvedTheme === 'dark');
     }
+  }, [resolvedTheme, variant]);
 
+  useEffect(() => {
     fetch('/api/site-settings')
       .then((res) => res.json())
       .then((data) => {
-        if (data.success && data.data) {
+        if (data?.success && data?.data) {
           setSettings(data.data);
         }
       })
-      .catch((err) => console.error('Error fetching logo settings:', err));
-  }, [theme, resolvedTheme, variant]);
+      .catch(() => {});
+  }, []);
 
-  const sizeConfig = {
-    sm: { width: 140, height: 40 }, // Premium minimal navbar size
-    md: { width: 180, height: 50 }, // Standard navbar size
-    lg: { width: 240, height: 75 }, // Forms and Footer size
-  };
-  const config = sizeConfig[size];
+  const { width, height } = sizeConfig[size];
 
-  // Only use Image when we have a configured URL from DB
-  const logoUrl = settings
-    ? isDark && settings.logoDarkUrl
-      ? settings.logoDarkUrl
-      : !isDark && settings.logoLightUrl
-        ? settings.logoLightUrl
-        : settings.logoUrl || null
-    : null;
+  const resolvedLogoUrl: string | null = (() => {
+    if (settings) {
+      if (isDark && isValidLogoUrl(settings.logoDarkUrl)) return settings.logoDarkUrl!;
+      if (!isDark && isValidLogoUrl(settings.logoLightUrl)) return settings.logoLightUrl!;
+      if (isValidLogoUrl(settings.logoUrl)) return settings.logoUrl!;
+    }
+    return null;
+  })();
 
-  const TextFallback = () => (
-    <div
-      className="flex items-center"
-      style={{ width: config.width, height: config.height }}
-    >
-      <Image
-        src="/logo/IMG_20260728_215848_226.png"
-        alt="Salam Scholarships Logo"
-        fill
-        className="object-contain object-left scale-[2.5] origin-left translate-x-4"
-        priority
-      />
-    </div>
-  );
+  // Always show the light logo as SSR default to avoid blank flash
+  // After mount, switch to theme-appropriate logo
+  const defaultLogoSrc = mounted
+    ? isDark
+      ? '/logo/salamscholarships-logo-transparent.png'
+      : '/logo/salamscholarships-logo-transparent-v2.png'
+    : '/logo/salamscholarships-logo-transparent-v2.png'; // SSR safe default
 
-  if (!mounted) {
-    return (
-      <div className={`inline-flex items-center ${className}`}>
-        <div className="relative" style={{ width: config.width, height: config.height }}>
-          <TextFallback />
-        </div>
-      </div>
-    );
-  }
+  const logoSrc = resolvedLogoUrl || defaultLogoSrc;
 
   return (
     <div className={`inline-flex flex-col items-start ${className}`}>
-      <div className="relative" style={{ width: config.width, height: config.height }}>
-        {logoUrl && isConfiguredLogoUrl(logoUrl) ? (
-          <Image
-            src={logoUrl}
-            alt="Salam Scholarships"
-            fill
-            className="object-contain object-left scale-[2.5] origin-left translate-x-4"
-            priority
-          />
-        ) : (
-          <TextFallback />
-        )}
-      </div>
-      {/* Tagline - only show when we have a configured logo (no separate tagline image to avoid 404s) */}
-      {showTagline && logoUrl && (
-        <div className="mt-1 text-xs text-muted-foreground">Educational Opportunities</div>
+      <NextImage
+        src={logoSrc}
+        alt="Salam Scholarships – Educational Opportunities"
+        width={width}
+        height={height}
+        className="object-contain"
+        style={{ width, height, objectFit: 'contain', objectPosition: 'left center' }}
+        priority
+        quality={95}
+        unoptimized
+      />
+      {showTagline && (
+        <span className="mt-1 text-[10px] font-semibold tracking-[0.2em] uppercase text-brand-gold/80 pl-0.5">
+          Educational Opportunities
+        </span>
       )}
     </div>
   );

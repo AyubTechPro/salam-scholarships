@@ -136,7 +136,7 @@ export default function NavbarModern() {
         <div className="flex items-center justify-between h-20 relative">
           {/* LEFT: Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <Link href={`/${locale}`} className="flex items-center hover:opacity-80 transition-opacity transform scale-[1.3] origin-left">
+            <Link href={`/${locale}`} className="flex items-center hover:opacity-80 transition-opacity duration-200">
               <Logo size="md" showTagline={false} variant="light" />
             </Link>
           </div>

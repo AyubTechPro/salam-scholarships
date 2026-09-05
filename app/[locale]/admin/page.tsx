@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { 
-  Users, 
-  FileText, 
-  MessageSquare, 
+import {
+  Users,
+  FileText,
+  MessageSquare,
   GraduationCap,
   TrendingUp,
   Activity,
@@ -95,36 +95,36 @@ export default async function AdminDashboardPage({ params: { locale } }: { param
 
       {/* KPI Strips - Linear Style */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          title={t("activeStudents")} 
-          value={stats.totalStudents} 
-          icon={<Users className="w-4 h-4 text-[#888]" />} 
+        <StatCard
+          title={t("activeStudents")}
+          value={stats.totalStudents}
+          icon={<Users className="w-4 h-4 text-[#888]" />}
           trend="+12%"
         />
-        <StatCard 
-          title={t("newConsultations")} 
-          value={stats.newConsultations} 
-          icon={<MessageSquare className="w-4 h-4 text-[#888]" />} 
+        <StatCard
+          title={t("newConsultations")}
+          value={stats.newConsultations}
+          icon={<MessageSquare className="w-4 h-4 text-[#888]" />}
           trend={t("requiresAction")}
           urgent={stats.newConsultations > 0}
         />
-        <StatCard 
-          title={t("totalApplications")} 
-          value={stats.totalApplications} 
-          icon={<FileText className="w-4 h-4 text-[#888]" />} 
+        <StatCard
+          title={t("totalApplications")}
+          value={stats.totalApplications}
+          icon={<FileText className="w-4 h-4 text-[#888]" />}
           trend="+5%"
         />
-        <StatCard 
-          title={t("activePrograms")} 
-          value={stats.activePrograms} 
-          icon={<GraduationCap className="w-4 h-4 text-[#888]" />} 
+        <StatCard
+          title={t("activePrograms")}
+          value={stats.activePrograms}
+          icon={<GraduationCap className="w-4 h-4 text-[#888]" />}
           trend={t("stable")}
         />
       </div>
 
       {/* Silicon Valley Dashboard Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Left Column: Recent Applications */}
         <div className="lg:col-span-2 border border-[#222] rounded-xl overflow-hidden bg-[#0A0A0A] flex flex-col">
           <div className="px-5 py-4 border-b border-[#222] flex items-center justify-between bg-[#111]">
@@ -133,7 +133,7 @@ export default async function AdminDashboardPage({ params: { locale } }: { param
               {t("viewAll")}
             </Link>
           </div>
-          
+
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse min-w-[600px]">
               <thead>
@@ -189,7 +189,7 @@ export default async function AdminDashboardPage({ params: { locale } }: { param
 
         {/* Right Column: Widgets */}
         <div className="space-y-6">
-          
+
           {/* Live Traffic Widget - Premium UI */}
           <div className="relative border border-[#222] rounded-xl overflow-hidden bg-[#0A0A0A] group">
             <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-500/20 transition-colors duration-500" />
@@ -207,8 +207,8 @@ export default async function AdminDashboardPage({ params: { locale } }: { param
               <p className="text-xs font-medium text-[#888] uppercase tracking-wider">{t("activeUsers")}</p>
             </div>
             <div className="px-5 py-3 bg-[#111]/80 backdrop-blur-md border-t border-[#222] flex justify-between items-center text-[10px] text-[#666] font-medium uppercase tracking-wider">
-              <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-blue-400"/> {t("trackingGlobal")}</span>
-              <span className="flex items-center gap-1"><Clock className="w-3 h-3"/> {t("updatedLive")}</span>
+              <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-blue-400" /> {t("trackingGlobal")}</span>
+              <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {t("updatedLive")}</span>
             </div>
           </div>
 
@@ -229,9 +229,9 @@ export default async function AdminDashboardPage({ params: { locale } }: { param
                     </div>
                     {/* Visual bar with gradient glow */}
                     <div className="h-2 w-full bg-[#111] rounded-full overflow-hidden border border-[#222]">
-                      <div 
-                        className="h-full bg-gradient-to-r from-brand-gold/50 to-brand-gold rounded-full relative" 
-                        style={{ width: `${Math.max(5, (prog.count / stats.topPrograms[0].count) * 100)}%` }} 
+                      <div
+                        className="h-full bg-gradient-to-r from-brand-gold/50 to-brand-gold rounded-full relative"
+                        style={{ width: `${Math.max(5, (prog.count / stats.topPrograms[0].count) * 100)}%` }}
                       >
                         <div className="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite]" />
                       </div>
@@ -250,22 +250,22 @@ export default async function AdminDashboardPage({ params: { locale } }: { param
               <h2 className="text-sm font-medium text-[#EDEDED]">{t("quickActions")}</h2>
             </div>
             <div className="p-2 space-y-1">
-              <QuickActionButton 
-                title={t("addNewProgram")} 
+              <QuickActionButton
+                title={t("addNewProgram")}
                 shortcut="⌘ P"
-                icon={<GraduationCap className="w-4 h-4 text-[#888]" />} 
+                icon={<GraduationCap className="w-4 h-4 text-[#888]" />}
                 href={`/${locale}/admin/programs/new`}
               />
-              <QuickActionButton 
-                title={t("reviewConsultations")} 
+              <QuickActionButton
+                title={t("reviewConsultations")}
                 shortcut="⌘ C"
-                icon={<MessageSquare className="w-4 h-4 text-[#888]" />} 
+                icon={<MessageSquare className="w-4 h-4 text-[#888]" />}
                 href={`/${locale}/admin/consultations`}
               />
-              <QuickActionButton 
-                title={t("successStories")} 
+              <QuickActionButton
+                title={t("successStories")}
                 shortcut="⌘ S"
-                icon={<TrendingUp className="w-4 h-4 text-[#888]" />} 
+                icon={<TrendingUp className="w-4 h-4 text-[#888]" />}
                 href={`/${locale}/admin/success-stories`}
               />
             </div>
