@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 /**
  * Admin Activity Log API
  * Returns recent user activities for admin dashboard

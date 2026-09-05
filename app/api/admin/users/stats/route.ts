@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAnyAdminAPI } from '@/lib/rbac-api';
 import { prisma } from '@/lib/prisma';

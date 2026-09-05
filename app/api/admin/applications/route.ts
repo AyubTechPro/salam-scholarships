@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { requireSuperAdminAPI, requireGrowthManagerAPI } from '@/lib/rbac-api';
 import { canPerformAction, logAuditAction } from '@/lib/rbac';
