@@ -14,6 +14,10 @@ interface ImageWithFallbackProps {
   className?: string;
   sizes?: string;
   priority?: boolean;
+  placeholder?: 'blur' | 'empty';
+  blurDataURL?: string;
+  loading?: "lazy" | "eager";
+  onError?: (e: any) => void;
 }
 
 export default function ImageWithFallback({
@@ -25,12 +29,16 @@ export default function ImageWithFallback({
   className,
   sizes,
   priority,
+  loading,
+  onError: customOnError
 }: ImageWithFallbackProps) {
   const [imgSrc, setImgSrc] = useState(src);
   const [hasError, setHasError] = useState(false);
   const blurData = generateBrandBlurPlaceholder();
 
-  const handleError = () => {
+  const handleError = (e?: any) => {
+    if (customOnError && e) customOnError(e);
+    
     if (imgSrc !== '/images/placeholder.png') {
       setImgSrc('/images/placeholder.png'); // Fallback to placeholder
     } else {
@@ -61,6 +69,7 @@ export default function ImageWithFallback({
         onError={handleError}
         placeholder="blur"
         blurDataURL={blurData}
+        loading={loading}
       />
     );
   }
@@ -77,6 +86,7 @@ export default function ImageWithFallback({
       onError={handleError}
       placeholder="blur"
       blurDataURL={blurData}
+      loading={loading}
     />
   );
 }

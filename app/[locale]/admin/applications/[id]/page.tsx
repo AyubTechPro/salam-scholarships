@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { User, FileText, Globe, Mail, Phone, Calendar, ArrowLeft, CheckCircle, XCircle, Clock } from "lucide-react";
 import Link from "next/link";
 import ApplicationStatusUpdater from "@/components/admin/ApplicationStatusUpdater";
+import { getTranslations } from "next-intl/server";
 
 const prisma = new PrismaClient();
 
@@ -20,6 +21,10 @@ export default async function ApplicationDetailPage({
   });
 
   if (!application) notFound();
+
+  const t = await getTranslations("admin.applications");
+  const tDetails = await getTranslations("admin.details");
+  const tCommon = await getTranslations("admin.common");
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -42,23 +47,23 @@ export default async function ApplicationDetailPage({
           <div className="bg-[#0A0A0A] border border-[#222] rounded-xl p-6">
             <h2 className="text-lg font-bold text-[#EDEDED] mb-4 flex items-center gap-2">
               <User className="w-5 h-5 text-brand-gold" />
-              Applicant Profile
+              {tDetails("applicantInfo")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <p className="text-xs text-[#888] mb-1">Full Name</p>
+                <p className="text-xs text-[#888] mb-1">ФИО</p>
                 <p className="text-sm text-[#EDEDED] font-medium">{application.user.name} {application.user.surname}</p>
               </div>
               <div>
-                <p className="text-xs text-[#888] mb-1">Email</p>
+                <p className="text-xs text-[#888] mb-1">Почта</p>
                 <p className="text-sm text-[#EDEDED] font-medium">{application.user.email}</p>
               </div>
               <div>
-                <p className="text-xs text-[#888] mb-1">Phone</p>
+                <p className="text-xs text-[#888] mb-1">Телефон</p>
                 <p className="text-sm text-[#EDEDED] font-medium">{application.user.phone || "Not provided"}</p>
               </div>
               <div>
-                <p className="text-xs text-[#888] mb-1">Submitted</p>
+                <p className="text-xs text-[#888] mb-1">Сана</p>
                 <p className="text-sm text-[#EDEDED] font-medium">
                   {new Date(application.createdAt).toLocaleString()}
                 </p>
@@ -126,7 +131,7 @@ export default async function ApplicationDetailPage({
         {/* Right Column: Status & Program */}
         <div className="space-y-6">
           <div className="bg-[#0A0A0A] border border-[#222] rounded-xl p-6">
-            <h2 className="text-lg font-bold text-[#EDEDED] mb-4">Application Status</h2>
+            <h2 className="text-lg font-bold text-[#EDEDED] mb-4">{tDetails("applicationStatus")}</h2>
             
             <div className="mb-6 flex items-center gap-3">
               <span className={`inline-flex items-center px-2.5 py-1 rounded text-xs font-bold ${
@@ -153,15 +158,15 @@ export default async function ApplicationDetailPage({
             <div className="space-y-3">
               <div className="font-medium text-[#EDEDED]">{application.program.title}</div>
               <div className="flex justify-between text-xs text-[#888] border-b border-[#222] pb-2">
-                <span>Country</span>
+                <span>Кишвар</span>
                 <span className="text-[#EDEDED]">{application.program.country}</span>
               </div>
               <div className="flex justify-between text-xs text-[#888] border-b border-[#222] pb-2">
-                <span>Category</span>
+                <span>Категория</span>
                 <span className="text-[#EDEDED]">{application.program.category}</span>
               </div>
               <div className="flex justify-between text-xs text-[#888]">
-                <span>Funding</span>
+                <span>Маблағгузорӣ</span>
                 <span className="text-[#EDEDED]">{application.program.fundingType}</span>
               </div>
             </div>

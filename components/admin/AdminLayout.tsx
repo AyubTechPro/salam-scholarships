@@ -48,7 +48,7 @@ export default function AdminLayout({
             )}
           </div>
           <div className="flex items-center gap-4">
-            <AdminLanguageSwitcher currentLocale={locale} />
+            <AdminLanguageSwitcher />
           </div>
         </header>
 

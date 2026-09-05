@@ -2,10 +2,14 @@ import { PrismaClient } from "@prisma/client";
 import { User, Mail, Calendar, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import { getTranslations } from "next-intl/server";
 
 const prisma = new PrismaClient();
 
 export default async function StudentsPage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations("admin.students");
+  const tCommon = await getTranslations("admin.common");
+  
   const students = await prisma.user.findMany({
     where: { role: "USER" },
     orderBy: { createdAt: "desc" }
@@ -15,15 +19,15 @@ export default async function StudentsPage({ params: { locale } }: { params: { l
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">Students Database</h1>
-          <p className="text-sm text-[#888] mt-1">Manage registered students and their profiles.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">{t("title")}</h1>
+          <p className="text-sm text-[#888] mt-1">{t("description")}</p>
         </div>
       </div>
 
       <div className="border border-[#222] rounded-xl overflow-hidden bg-[#0A0A0A]">
         <div className="p-4 border-b border-[#222] flex items-center justify-between bg-[#111]">
           <div className="text-xs text-[#888]">
-            Total: <span className="text-[#EDEDED] font-medium">{students.length}</span>
+            <span className="text-[#EDEDED] font-medium">{students.length}</span>
           </div>
         </div>
 
@@ -31,17 +35,17 @@ export default async function StudentsPage({ params: { locale } }: { params: { l
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="border-b border-[#222] bg-[#111]">
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Student</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Contact</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">CRM Status</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888] text-right">Joined</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableName")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableEmail")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableStatus")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888] text-right">{t("tableJoined")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#222]">
               {students.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-5 py-8 text-center text-[#666] text-sm">
-                    No students registered yet.
+                    {tCommon("noData")}
                   </td>
                 </tr>
               ) : (

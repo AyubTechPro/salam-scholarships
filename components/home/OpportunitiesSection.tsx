@@ -98,15 +98,19 @@ export default function OpportunitiesSection() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-navy mb-4">
+    <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      {/* Background Ambient Glows */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-gold/10 blur-[120px] rounded-full pointer-events-none mix-blend-screen" />
+      <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
+      
+      <div className="relative z-10 text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-black text-navy dark:text-white tracking-tight mb-6">
           <UIDictionaryText 
             dictKey="opportunitiesSection.title" 
             fallback={locale === 'tj' ? 'Имкониятҳои охирин' : locale === 'ru' ? 'Последние возможности' : 'Latest Opportunities'} 
           />
         </h2>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto font-medium">
           {t('subtitle')}
         </p>
       </div>
@@ -116,15 +120,18 @@ export default function OpportunitiesSection() {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex justify-center items-center py-12">
-          <Loader2 className="w-8 h-8 text-gold animate-spin" />
+        <div className="flex justify-center items-center py-20">
+          <div className="relative">
+            <div className="absolute inset-0 bg-brand-gold/20 blur-xl rounded-full" />
+            <Loader2 className="relative z-10 w-12 h-12 text-brand-gold animate-spin" />
+          </div>
         </div>
       )}
 
       {/* Error State */}
       {error && !loading && (
-        <div className="text-center py-12">
-          <p className="text-red-600 text-lg">{error}</p>
+        <div className="text-center py-12 bg-red-500/10 border border-red-500/20 rounded-2xl max-w-2xl mx-auto">
+          <p className="text-red-500 font-medium text-lg">{error}</p>
         </div>
       )}
 

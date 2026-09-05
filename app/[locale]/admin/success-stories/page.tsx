@@ -4,10 +4,15 @@ import { Plus, Edit, Award, Quote } from "lucide-react";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { deleteSuccessStory } from "@/app/actions/admin";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import { getTranslations } from "next-intl/server";
 
 const prisma = new PrismaClient();
 
 export default async function SuccessStoriesPage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations("admin.successStories");
+  const tCommon = await getTranslations("admin.common");
+  const tPrograms = await getTranslations("admin.programs");
+  
   const stories = await prisma.successStory.findMany({
     orderBy: { order: "asc" }
   });
@@ -16,28 +21,28 @@ export default async function SuccessStoriesPage({ params: { locale } }: { param
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">Success Stories</h1>
-          <p className="text-sm text-[#888] mt-1">Manage student testimonials and achievements for the homepage.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">{t("title")}</h1>
+          <p className="text-sm text-[#888] mt-1">{t("description")}</p>
         </div>
         <Link 
           href={`/${locale}/admin/success-stories/new`}
           className="flex items-center gap-2 bg-[#EDEDED] hover:bg-white text-[#0A0A0A] px-4 py-2 rounded-lg font-medium transition-colors text-sm"
         >
           <Plus className="w-4 h-4" />
-          Add Story
+          {t("addNew")}
         </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {stories.length === 0 ? (
           <div className="col-span-full text-center p-12 bg-[#0A0A0A] rounded-xl border border-[#222]">
-            <p className="text-[#666] mb-4 text-sm">No success stories found. The homepage is currently using dummy data.</p>
+            <p className="text-[#666] mb-4 text-sm">{tCommon("noData")}</p>
             <Link 
               href={`/${locale}/admin/success-stories/new`}
               className="inline-flex items-center gap-2 bg-[#111] hover:bg-[#222] text-[#EDEDED] px-4 py-2 rounded-lg font-medium transition-colors text-sm border border-[#333]"
             >
               <Plus className="w-4 h-4" />
-              Create your first success story
+              {t("addNew")}
             </Link>
           </div>
         ) : (
@@ -68,7 +73,7 @@ export default async function SuccessStoriesPage({ params: { locale } }: { param
                 
                 <div className="flex items-center justify-between pt-4 border-t border-[#222]">
                   <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${story.isActive ? 'text-emerald-500 border border-emerald-500/20' : 'text-[#888] border border-[#333]'}`}>
-                    {story.isActive ? 'Active' : 'Hidden'}
+                    {story.isActive ? tPrograms("active") : tPrograms("inactive")}
                   </span>
                   
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

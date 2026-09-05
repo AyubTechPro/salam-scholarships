@@ -2,10 +2,14 @@ import { PrismaClient } from "@prisma/client";
 import { Mail, Phone, Calendar, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 const prisma = new PrismaClient();
 
 export default async function ConsultationsPage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations("admin.consultations");
+  const tCommon = await getTranslations("admin.common");
+  
   const consultations = await prisma.consultationRequest.findMany({
     orderBy: { createdAt: "desc" }
   });
@@ -14,15 +18,15 @@ export default async function ConsultationsPage({ params: { locale } }: { params
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">Consultation Requests</h1>
-          <p className="text-sm text-[#888] mt-1">Manage leads and incoming student inquiries.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">{t("title")}</h1>
+          <p className="text-sm text-[#888] mt-1">{t("description")}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
         {consultations.length === 0 ? (
           <div className="text-center p-12 bg-[#0A0A0A] rounded-xl border border-[#222]">
-            <p className="text-[#666] text-sm">No consultation requests found.</p>
+            <p className="text-[#666] text-sm">{tCommon("noData")}</p>
           </div>
         ) : (
           consultations.map((req) => (
@@ -31,8 +35,8 @@ export default async function ConsultationsPage({ params: { locale } }: { params
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold text-white">{req.name}</h3>
                   <div className="flex items-center gap-3">
-                    <StatusBadge status={req.status} />
-                    <Link href={`/${locale}/admin/consultations/${req.id}`} className="text-xs text-brand-gold hover:underline">View Details</Link>
+                    <StatusBadge status={req.status} t={t} />
+                    <Link href={`/${locale}/admin/consultations/${req.id}`} className="text-xs text-brand-gold hover:underline">{tCommon("view")}</Link>
                   </div>
                 </div>
                 
@@ -57,35 +61,32 @@ export default async function ConsultationsPage({ params: { locale } }: { params
                   <p className="text-[#EDEDED] text-sm">&quot;{req.message}&quot;</p>
                   {(req.targetCountry || req.englishLevel) && (
                     <div className="mt-3 pt-3 border-t border-[#222] flex gap-4 text-[10px] text-[#666]">
-                      {req.targetCountry && <span>Target Country: <strong className="text-[#EDEDED]">{req.targetCountry}</strong></span>}
-                      {req.englishLevel && <span>English Level: <strong className="text-[#EDEDED]">{req.englishLevel}</strong></span>}
+                      {req.targetCountry && <span>Кишвари Интихобшуда: <strong className="text-[#EDEDED]">{req.targetCountry}</strong></span>}
+                      {req.englishLevel && <span>Сатҳи Забони Англисӣ: <strong className="text-[#EDEDED]">{req.englishLevel}</strong></span>}
                     </div>
                   )}
                 </div>
               </div>
 
               <div className="w-full md:w-48 flex flex-col gap-2 justify-center border-t md:border-t-0 md:border-l border-[#222] pt-4 md:pt-0 md:pl-6">
-                <p className="text-[10px] text-[#666] font-mono mb-1 uppercase tracking-wider">Update Status</p>
+                <p className="text-[10px] text-[#666] font-mono mb-1 uppercase tracking-wider">{tCommon("actions")}</p>
                 <form action={async () => {
                   "use server"
                   await prisma.consultationRequest.update({ where: { id: req.id }, data: { status: "CONTACTED" } });
                   revalidatePath('/[locale]/admin/consultations', 'page');
                 }}>
-                  <button className="w-full text-left px-3 py-1.5 text-xs text-[#888] hover:text-[#EDEDED] hover:bg-[#222] rounded transition-colors border border-transparent hover:border-[#333]">Mark as Contacted</button>
+                  <button className="w-full text-left px-3 py-1.5 text-xs text-[#888] hover:text-[#EDEDED] hover:bg-[#222] rounded transition-colors border border-transparent hover:border-[#333]">
+                    {t("statusContacted")}
+                  </button>
                 </form>
                 <form action={async () => {
                   "use server"
                   await prisma.consultationRequest.update({ where: { id: req.id }, data: { status: "SUCCESS" } });
                   revalidatePath('/[locale]/admin/consultations', 'page');
                 }}>
-                  <button className="w-full text-left px-3 py-1.5 text-xs text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors border border-transparent hover:border-emerald-500/20">Mark as Success</button>
-                </form>
-                <form action={async () => {
-                  "use server"
-                  await prisma.consultationRequest.update({ where: { id: req.id }, data: { status: "REJECTED" } });
-                  revalidatePath('/[locale]/admin/consultations', 'page');
-                }}>
-                  <button className="w-full text-left px-3 py-1.5 text-xs text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors border border-transparent hover:border-red-500/20">Mark as Rejected</button>
+                  <button className="w-full text-left px-3 py-1.5 text-xs text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors border border-transparent hover:border-emerald-500/20">
+                    {t("statusResolved")}
+                  </button>
                 </form>
               </div>
             </div>
@@ -96,16 +97,14 @@ export default async function ConsultationsPage({ params: { locale } }: { params
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, t }: { status: string, t: any }) {
   switch (status) {
     case "NEW":
-      return <span className="px-2 py-0.5 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded text-[10px] font-medium flex items-center w-max gap-1"><Clock className="w-3 h-3"/> New</span>;
+      return <span className="px-2 py-0.5 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded text-[10px] font-medium flex items-center w-max gap-1"><Clock className="w-3 h-3"/> {t("statusNew")}</span>;
     case "CONTACTED":
-      return <span className="px-2 py-0.5 bg-[#222] text-[#888] border border-[#333] rounded text-[10px] font-medium flex items-center w-max gap-1">Contacted</span>;
+      return <span className="px-2 py-0.5 bg-[#222] text-[#888] border border-[#333] rounded text-[10px] font-medium flex items-center w-max gap-1">{t("statusContacted")}</span>;
     case "SUCCESS":
-      return <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded text-[10px] font-medium flex items-center w-max gap-1"><CheckCircle2 className="w-3 h-3"/> Success</span>;
-    case "REJECTED":
-      return <span className="px-2 py-0.5 bg-red-500/10 text-red-500 border border-red-500/20 rounded text-[10px] font-medium flex items-center w-max gap-1"><XCircle className="w-3 h-3"/> Rejected</span>;
+      return <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded text-[10px] font-medium flex items-center w-max gap-1"><CheckCircle2 className="w-3 h-3"/> {t("statusResolved")}</span>;
     default:
       return <span className="px-2 py-0.5 bg-[#222] text-[#888] border border-[#333] rounded text-[10px] font-medium flex items-center w-max gap-1">{status}</span>;
   }

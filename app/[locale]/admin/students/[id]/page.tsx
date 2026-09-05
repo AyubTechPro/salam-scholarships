@@ -4,6 +4,7 @@ import { User, Mail, Globe, MapPin, GraduationCap, ArrowLeft, BookOpen, Clock } 
 import Link from "next/link";
 import StudentCRMUpdater from "@/components/admin/StudentCRMUpdater";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import { getTranslations } from "next-intl/server";
 
 const prisma = new PrismaClient();
 
@@ -23,6 +24,9 @@ export default async function StudentDetailPage({
   });
 
   if (!student) notFound();
+  
+  const t = await getTranslations("admin.students");
+  const tCommon = await getTranslations("admin.common");
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -34,8 +38,8 @@ export default async function StudentDetailPage({
           <ArrowLeft className="w-5 h-5 text-[#EDEDED]" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">Student Profile</h1>
-          <p className="text-sm text-[#888] mt-1">Manage CRM details and application history.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">{t("studentProfile") || "Student Profile"}</h1>
+          <p className="text-sm text-[#888] mt-1">{t("manageDetails") || "Manage CRM details and application history."}</p>
         </div>
       </div>
 
@@ -82,7 +86,7 @@ export default async function StudentDetailPage({
           <div className="bg-[#0A0A0A] border border-[#222] rounded-xl p-6">
             <h2 className="text-lg font-bold text-[#EDEDED] mb-4 flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-brand-gold" />
-              Application History
+              {t("appHistory") || "Application History"}
             </h2>
             
             <div className="space-y-4">

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, X, Loader2 } from "lucide-react";
+import { UploadCloud, X, Loader2, Save } from "lucide-react";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { uploadImageAction } from "@/app/actions/upload";
+import { useTranslations } from "next-intl";
 
 export default function SuccessStoryForm({ 
   initialData, 
@@ -14,8 +15,12 @@ export default function SuccessStoryForm({
   locale: string; 
 }) {
   const router = useRouter();
+  const t = useTranslations("admin.forms");
+  const tCommon = useTranslations("admin.common");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
     achievement: initialData?.achievement || "",
@@ -31,10 +36,10 @@ export default function SuccessStoryForm({
 
     try {
       setIsUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
+      const data = new FormData();
+      data.append("file", file);
       
-      const res = await uploadImageAction(formData);
+      const res = await uploadImageAction(data);
       if (res.success && res.url) {
         setFormData(prev => ({ ...prev, photoUrl: res.url }));
       } else {
@@ -45,6 +50,7 @@ export default function SuccessStoryForm({
       alert("Failed to upload image.");
     } finally {
       setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -78,101 +84,122 @@ export default function SuccessStoryForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl bg-white dark:bg-[#111] p-6 rounded-xl border border-gray-200 dark:border-[#333]">
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-navy dark:text-gray-200">Student Name</label>
-        <input 
-          required
-          type="text" 
-          value={formData.name}
-          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-          className="w-full bg-gray-50 dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2 text-navy dark:text-white"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-navy dark:text-gray-200">Achievement (e.g. Fully Funded at Harvard)</label>
-        <input 
-          required
-          type="text" 
-          value={formData.achievement}
-          onChange={(e) => setFormData(prev => ({ ...prev, achievement: e.target.value }))}
-          className="w-full bg-gray-50 dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2 text-navy dark:text-white"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-navy dark:text-gray-200">Quote</label>
-        <textarea 
-          required
-          rows={4}
-          value={formData.quote}
-          onChange={(e) => setFormData(prev => ({ ...prev, quote: e.target.value }))}
-          className="w-full bg-gray-50 dark:bg-[#0A0A0A] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2 text-navy dark:text-white"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-navy dark:text-gray-200">Student Photo</label>
-        {formData.photoUrl ? (
-          <div className="relative w-48 h-48 rounded-lg overflow-hidden border border-[#333]">
-            <ImageWithFallback src={formData.photoUrl} alt="Preview" fill className="object-cover" />
-            <button 
-              type="button" 
-              onClick={() => setFormData(prev => ({ ...prev, photoUrl: "" }))}
-              className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full hover:bg-black/80"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        ) : (
-          <div className="relative w-48 h-48 border-2 border-dashed border-gray-300 dark:border-[#333] rounded-lg hover:border-brand-gold transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer bg-gray-50 dark:bg-[#0A0A0A]">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-xl space-y-6">
+        <h2 className="text-xl font-semibold text-white border-b border-white/10 pb-4">{t("basicInfo")}</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">{t("studentName")}</label>
             <input 
-              type="file" 
-              accept="image/*"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              onChange={handleImageUpload}
-              disabled={isUploading}
+              required
+              type="text" 
+              value={formData.name}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
             />
-            {isUploading ? (
-              <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
-            ) : (
-              <>
-                <Upload className="w-8 h-8 text-gray-400" />
-                <span className="text-sm text-gray-500 font-medium">Upload Image</span>
-              </>
-            )}
           </div>
-        )}
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">{t("achievement")}</label>
+            <input 
+              required
+              type="text" 
+              value={formData.achievement}
+              onChange={(e) => setFormData(prev => ({ ...prev, achievement: e.target.value }))}
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
+            />
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <label className="text-sm font-medium text-gray-300">{t("quote")}</label>
+            <textarea 
+              required
+              rows={4}
+              value={formData.quote}
+              onChange={(e) => setFormData(prev => ({ ...prev, quote: e.target.value }))}
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <label className="flex items-center gap-2 cursor-pointer">
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-xl space-y-6">
+        <h2 className="text-xl font-semibold text-white border-b border-white/10 pb-4">{t("mediaLinks")}</h2>
+        
+        <div className="space-y-4">
+          <label className="text-sm font-medium text-gray-300">{t("storyImage")}</label>
+          
+          {formData.photoUrl ? (
+            <div className="relative w-48 h-48 rounded-xl overflow-hidden border border-white/10 group">
+              <ImageWithFallback src={formData.photoUrl} alt="Preview" fill className="object-cover" />
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button 
+                  type="button" 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                >
+                  <UploadCloud className="w-4 h-4" />
+                  {tCommon("uploadImage")}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="w-48 h-48 border-2 border-dashed border-white/20 hover:border-white/40 rounded-xl bg-black/20 flex flex-col items-center justify-center cursor-pointer transition-colors"
+            >
+              {isUploading ? (
+                <div className="flex flex-col items-center gap-2 text-gray-400">
+                  <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                  <span className="text-sm">Uploading...</span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2 text-gray-400">
+                  <UploadCloud className="w-8 h-8 mb-2 opacity-50" />
+                  <span className="text-sm font-medium">{tCommon("uploadImage")}</span>
+                </div>
+              )}
+            </div>
+          )}
+          
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            className="hidden" 
+            accept="image/*" 
+            onChange={handleImageUpload}
+            disabled={isUploading}
+          />
+        </div>
+
+        <div className="flex items-center gap-3 pt-4 border-t border-white/10">
           <input 
             type="checkbox" 
+            id="isActive"
             checked={formData.isActive}
             onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
-            className="w-4 h-4 accent-brand-gold"
+            className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
           />
-          <span className="text-sm font-medium text-navy dark:text-gray-200">Visible on Homepage</span>
-        </label>
+          <label htmlFor="isActive" className="text-gray-300">{t("isActive")}</label>
+        </div>
       </div>
 
-      <div className="pt-4 flex gap-4">
+      <div className="flex justify-end gap-4 pt-4">
         <button 
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#222]"
+          className="px-6 py-2.5 rounded-xl font-medium text-gray-400 hover:bg-white/5 border border-transparent hover:border-white/10 transition-colors"
         >
-          Cancel
+          {tCommon("cancel")}
         </button>
         <button 
           type="submit"
           disabled={isSubmitting || isUploading}
-          className="px-6 py-2 rounded-lg font-medium bg-brand-gold text-navy hover:bg-brand-gold/90 disabled:opacity-50 flex items-center gap-2"
+          className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white px-8 py-3 rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] disabled:opacity-50"
         >
-          {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-          {initialData ? "Save Changes" : "Create Story"}
+          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+          {isSubmitting ? tCommon("saving") : (initialData ? t("updateStory") : t("publishStory"))}
         </button>
       </div>
     </form>

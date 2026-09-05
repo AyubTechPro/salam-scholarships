@@ -139,14 +139,16 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
   }).length;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
+    <div className="glass dark:glass-dark rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-6 mb-12 border border-white/20 dark:border-white/10 backdrop-blur-xl transition-all">
       {/* Filter Header */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-2">
-          <Filter className="w-5 h-5 text-gold" />
-          <h2 className="text-xl font-bold text-navy">{t('common.filter')}</h2>
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-brand-gold/10 rounded-lg">
+            <Filter className="w-5 h-5 text-brand-gold" />
+          </div>
+          <h2 className="text-xl font-bold text-navy dark:text-white tracking-tight">{t('common.filter')}</h2>
           {activeFiltersCount > 0 && (
-            <span className="bg-gold text-white text-xs font-semibold px-2 py-1 rounded-full">
+            <span className="bg-brand-gold text-brand-navy text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
               {activeFiltersCount}
             </span>
           )}
@@ -155,7 +157,7 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
           {activeFiltersCount > 0 && (
             <button
               onClick={clearFilters}
-              className="text-sm text-gray-600 hover:text-navy flex items-center space-x-1"
+              className="text-sm font-medium text-gray-500 hover:text-brand-gold flex items-center space-x-1.5 transition-colors"
             >
               <X className="w-4 h-4" />
               <span>{locale === 'tj' ? 'Тоза кардан' : locale === 'ru' ? 'Очистить' : 'Clear'}</span>
@@ -182,15 +184,15 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
           >
             {/* Level Filter */}
-            <div className="relative">
-              <label className="block text-sm font-semibold text-navy mb-2">
+            <div className="relative group">
+              <label className="block text-xs font-bold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-2">
                 {t('common.level')}
               </label>
               <div className="relative">
                 <select
                   value={filters.level}
                   onChange={(e) => handleFilterChange('level', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent appearance-none bg-white cursor-pointer"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold appearance-none bg-white/50 dark:bg-black/20 backdrop-blur-sm cursor-pointer transition-all dark:text-white"
                 >
                   <option value="">{t('filters.allLevels')}</option>
                   {levels.map((level) => (
@@ -204,8 +206,8 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
             </div>
 
             {/* Country Filter */}
-            <div className="relative">
-              <label className="block text-sm font-semibold text-navy mb-2">
+            <div className="relative group">
+              <label className="block text-xs font-bold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-2">
                 {t('common.country')}
               </label>
               <div className="relative">
@@ -213,7 +215,7 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
                   value={filters.country}
                   onChange={(e) => handleFilterChange('country', e.target.value)}
                   disabled={loadingCountries}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent appearance-none bg-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold appearance-none bg-white/50 dark:bg-black/20 backdrop-blur-sm cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed dark:text-white"
                 >
                   <option value="">{loadingCountries ? (locale === 'tj' ? 'Бор шуда истодааст...' : locale === 'ru' ? 'Загрузка...' : 'Loading...') : t('filters.allCountries')}</option>
                   {countries.map((country) => (
@@ -227,15 +229,15 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
             </div>
 
             {/* Funding Type Filter */}
-            <div className="relative">
-              <label className="block text-sm font-semibold text-navy mb-2">
+            <div className="relative group">
+              <label className="block text-xs font-bold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-2">
                 {t('common.funding')}
               </label>
               <div className="relative">
                 <select
                   value={filters.fundingType}
                   onChange={(e) => handleFilterChange('fundingType', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent appearance-none bg-white cursor-pointer"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold appearance-none bg-white/50 dark:bg-black/20 backdrop-blur-sm cursor-pointer transition-all dark:text-white"
                 >
                   <option value="">{t('filters.allFunding')}</option>
                   {fundingTypes.map((type) => (
@@ -249,8 +251,8 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
             </div>
 
             {/* Category Filter */}
-            <div className="relative">
-              <label className="block text-sm font-semibold text-navy mb-2">
+            <div className="relative group">
+              <label className="block text-xs font-bold tracking-wider uppercase text-gray-500 dark:text-gray-400 mb-2">
                 {t('common.category')}
               </label>
               <div className="relative">
@@ -258,7 +260,7 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
                   value={filters.category}
                   onChange={(e) => handleFilterChange('category', e.target.value)}
                   disabled={loadingCategories}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent appearance-none bg-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold appearance-none bg-white/50 dark:bg-black/20 backdrop-blur-sm cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed dark:text-white"
                 >
                   <option value="">{loadingCategories ? (locale === 'tj' ? 'Бор шуда истодааст...' : locale === 'ru' ? 'Загрузка...' : 'Loading...') : t('filters.allCategories')}</option>
                   {categories.map((category) => (
@@ -275,17 +277,17 @@ export default function SmartFilter({ onFilterChange, syncFilters }: SmartFilter
       </AnimatePresence>
 
       {/* No English Cert Checkbox */}
-      <div className="mt-4 pt-4 border-t border-gray-200">
+      <div className="mt-6 pt-5 border-t border-gray-100 dark:border-white/10">
         <label className="flex items-center space-x-3 cursor-pointer group">
           <input
             type="checkbox"
             checked={filters.noEnglishCert || false}
             onChange={(e) => handleFilterChange('noEnglishCert', e.target.checked)}
-            className="w-5 h-5 text-gold focus:ring-gold border-gray-300 rounded cursor-pointer"
+            className="w-5 h-5 text-brand-gold focus:ring-brand-gold border-gray-300 rounded cursor-pointer"
           />
           <div className="flex items-center space-x-2">
-            <ShieldCheck className="w-5 h-5 text-green-600" />
-            <span className="text-sm font-semibold text-navy group-hover:text-gold transition-colors">
+            <ShieldCheck className="w-5 h-5 text-emerald-500" />
+            <span className="text-sm font-semibold text-navy dark:text-gray-300 group-hover:text-brand-gold transition-colors">
               {t('filters.noEnglishCert') || 'Show programs without IELTS/TOEFL requirement'}
             </span>
           </div>

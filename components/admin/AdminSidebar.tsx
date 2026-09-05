@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import LanguageSwitcher from "@/components/common/LanguageSwitcher";
+import AdminLanguageSwitcher from "@/components/admin/AdminLanguageSwitcher";
 
 export default function AdminSidebar({ 
   locale, 
@@ -65,7 +65,7 @@ export default function AdminSidebar({
           </div>
           <span className="text-[#EDEDED] font-semibold text-sm tracking-tight">Salam Admin</span>
         </div>
-        <LanguageSwitcher />
+        <AdminLanguageSwitcher />
       </div>
 
       <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">

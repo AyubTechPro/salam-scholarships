@@ -190,52 +190,56 @@ export default async function AdminDashboardPage({ params: { locale } }: { param
         {/* Right Column: Widgets */}
         <div className="space-y-6">
           
-          {/* Live Traffic Widget */}
-          <div className="border border-[#222] rounded-xl overflow-hidden bg-[#0A0A0A]">
-            <div className="px-5 py-4 border-b border-[#222] bg-[#111] flex items-center gap-2">
-              <div className="relative flex h-2 w-2">
+          {/* Live Traffic Widget - Premium UI */}
+          <div className="relative border border-[#222] rounded-xl overflow-hidden bg-[#0A0A0A] group">
+            <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-500/20 transition-colors duration-500" />
+            <div className="px-5 py-4 border-b border-[#222] bg-[#111]/50 backdrop-blur-md flex items-center gap-3">
+              <div className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </div>
-              <h2 className="text-sm font-medium text-[#EDEDED]">Live Traffic</h2>
+              <h2 className="text-sm font-bold text-white tracking-wide">{t("liveTraffic")}</h2>
             </div>
-            <div className="p-6 flex flex-col items-center justify-center">
-              <span className="text-5xl font-bold tracking-tighter text-emerald-500 mb-2">
+            <div className="p-6 flex flex-col items-center justify-center relative z-10">
+              <span className="text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600 mb-2 drop-shadow-lg">
                 {stats.activeCount}
               </span>
-              <p className="text-xs text-[#888]">Active users right now</p>
+              <p className="text-xs font-medium text-[#888] uppercase tracking-wider">{t("activeUsers")}</p>
             </div>
-            <div className="px-5 py-3 bg-[#111] border-t border-[#222] flex justify-between items-center text-xs text-[#888]">
-              <span className="flex items-center gap-1"><Globe className="w-3 h-3"/> Tracking Global</span>
-              <span>Updated live</span>
+            <div className="px-5 py-3 bg-[#111]/80 backdrop-blur-md border-t border-[#222] flex justify-between items-center text-[10px] text-[#666] font-medium uppercase tracking-wider">
+              <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-blue-400"/> {t("trackingGlobal")}</span>
+              <span className="flex items-center gap-1"><Clock className="w-3 h-3"/> {t("updatedLive")}</span>
             </div>
           </div>
 
-          {/* Trending Programs Widget */}
-          <div className="border border-[#222] rounded-xl overflow-hidden bg-[#0A0A0A]">
-            <div className="px-5 py-4 border-b border-[#222] bg-[#111] flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-brand-gold" />
-              <h2 className="text-sm font-medium text-[#EDEDED]">Trending (7 Days)</h2>
+          {/* Trending Programs Widget - Premium UI */}
+          <div className="border border-[#222] rounded-xl overflow-hidden bg-[#0A0A0A] relative group">
+            <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 bg-brand-gold/5 rounded-full blur-3xl pointer-events-none group-hover:bg-brand-gold/10 transition-colors duration-500" />
+            <div className="px-5 py-4 border-b border-[#222] bg-[#111]/50 backdrop-blur-md flex items-center gap-3">
+              <TrendingUp className="w-4 h-4 text-brand-gold drop-shadow-md" />
+              <h2 className="text-sm font-bold text-white tracking-wide">{t("trending")}</h2>
             </div>
-            <div className="p-4 space-y-4">
+            <div className="p-5 space-y-5 relative z-10">
               {stats.topPrograms.length > 0 ? (
                 stats.topPrograms.map((prog, i) => (
-                  <div key={i} className="flex flex-col gap-1.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-[#EDEDED] truncate pr-4">{prog.title}</span>
-                      <span className="text-[#888] shrink-0">{prog.count} views</span>
+                  <div key={i} className="flex flex-col gap-2">
+                    <div className="flex justify-between text-xs items-end">
+                      <span className="text-[#EDEDED] font-medium truncate pr-4">{prog.title}</span>
+                      <span className="text-brand-gold font-bold shrink-0 bg-brand-gold/10 px-2 py-0.5 rounded">{prog.count} {t("views")}</span>
                     </div>
-                    {/* Visual bar */}
-                    <div className="h-1.5 w-full bg-[#222] rounded-full overflow-hidden">
+                    {/* Visual bar with gradient glow */}
+                    <div className="h-2 w-full bg-[#111] rounded-full overflow-hidden border border-[#222]">
                       <div 
-                        className="h-full bg-brand-gold rounded-full" 
-                        style={{ width: `${Math.max(10, (prog.count / stats.topPrograms[0].count) * 100)}%` }} 
-                      />
+                        className="h-full bg-gradient-to-r from-brand-gold/50 to-brand-gold rounded-full relative" 
+                        style={{ width: `${Math.max(5, (prog.count / stats.topPrograms[0].count) * 100)}%` }} 
+                      >
+                        <div className="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite]" />
+                      </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-xs text-[#666] text-center py-4">Not enough data yet.</p>
+                <p className="text-xs text-[#666] text-center py-4 italic">{t("noDataYet", { fallback: "Маълумоти кофӣ нест" })}</p>
               )}
             </div>
           </div>

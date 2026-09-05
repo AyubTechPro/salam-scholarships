@@ -221,7 +221,7 @@ export async function updateConsultationStatus(id: string, status: any, internal
   });
 }
 
-export async function updateStudentCRMStatus(id: string, crmStatus: string, internalNotes: string) {
+export async function updateStudentCRMStatus(id: string, crmStatus: any, internalNotes: string) {
   const session = await getServerSession(authOptions);
   checkAuth(session);
   await prisma.user.update({

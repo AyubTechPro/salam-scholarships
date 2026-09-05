@@ -7,7 +7,7 @@ import Image from '@/components/common/ImageWithFallback';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { getBlurDataURL, getSafeImageUrl } from '@/lib/image-utils';
-import { Calendar, MapPin, Award, CheckCircle2, Clock, Heart, ShieldCheck, XCircle, AlertCircle, Zap, Eye } from 'lucide-react';
+import { Calendar, MapPin, Award, CheckCircle2, Clock, Heart, ShieldCheck, XCircle, AlertCircle, Zap, Eye, ArrowRight } from 'lucide-react';
 import { useSavedPrograms } from '@/hooks/useSavedPrograms';
 import { formatDistanceToNow } from 'date-fns';
 import { enUS, ru, type Locale } from 'date-fns/locale';
@@ -143,11 +143,12 @@ export default function OpportunityCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.3 }}
-      className="glass dark:glass-dark rounded-xl transition-all overflow-hidden relative group hover:-translate-y-1 hover:shadow-2xl hover:border-white/30"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      whileHover={{ y: -8, scale: 1.02 }}
+      transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
+      className="glass dark:glass-dark rounded-2xl transition-all overflow-hidden relative group hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_20px_40px_rgba(255,255,255,0.05)] border border-white/40 dark:border-white/10"
     >
       <HotDeadlineBadge deadline={deadline} />
       <Link href={`/${locale}/opportunities/${id}`}>
@@ -167,18 +168,18 @@ export default function OpportunityCard({
             
 
 
-            <div className="absolute top-3 right-3 flex flex-col items-end space-y-2 z-10">
+              <div className="absolute top-4 right-4 flex flex-col items-end space-y-2 z-10">
               <div className="flex items-center space-x-2">
                 {isVerified && (
-                  <div className="bg-gold text-white px-2 py-1 rounded-full flex items-center space-x-1 text-xs font-semibold">
-                    <CheckCircle2 className="w-3 h-3" />
+                  <div className="bg-brand-gold/90 backdrop-blur-md text-brand-navy px-3 py-1.5 rounded-full flex items-center space-x-1 text-xs font-bold shadow-lg">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>{t('common.verified')}</span>
                   </div>
                 )}
                 {!requiresEnglishCert && (
-                  <div className="bg-green-600 text-white px-2 py-1 rounded-full flex items-center space-x-1 text-xs font-semibold border border-green-700">
-                    <ShieldCheck className="w-3 h-3" />
-                    <span>{t('opportunities.noLanguageCert') || 'No IELTS/TOEFL Required'}</span>
+                  <div className="bg-emerald-500/90 backdrop-blur-md text-white px-3 py-1.5 rounded-full flex items-center space-x-1 text-xs font-bold shadow-lg">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>{t('opportunities.noLanguageCert') || 'No IELTS/TOEFL'}</span>
                   </div>
                 )}
               </div>
@@ -189,12 +190,12 @@ export default function OpportunityCard({
         {/* Content */}
         <div className="p-6">
           {/* Category & Level */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2 flex-wrap">
-              <span className="text-xs font-semibold text-gold bg-gold bg-opacity-10 px-2 py-1 rounded">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-2 flex-wrap gap-y-2">
+              <span className="text-xs font-bold text-brand-gold bg-brand-gold/10 px-2.5 py-1 rounded-md">
                 {getCategoryLabel(category)}
               </span>
-              <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
+              <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-white/5 px-2.5 py-1 rounded-md border border-gray-200 dark:border-white/10">
                 {getLevelLabel(level)}
               </span>
               {!requiresEnglishCert && (
@@ -205,14 +206,14 @@ export default function OpportunityCard({
               )}
             </div>
             {fundingType !== 'NONE' && (
-              <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 rounded-md">
                 {getFundingLabel(fundingType)}
               </span>
             )}
           </div>
 
           {/* Title */}
-          <h3 className="text-xl font-bold text-navy dark:text-white mb-2 line-clamp-2">
+          <h3 className="text-xl md:text-2xl font-black text-navy dark:text-white mb-3 line-clamp-2 group-hover:text-brand-gold transition-colors">
             {title}
           </h3>
 
@@ -223,13 +224,13 @@ export default function OpportunityCard({
 
     
           {/* Meta Info */}
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center text-sm text-gray-600">
-              <MapPin className="w-4 h-4 mr-2 text-gold" />
+          <div className="space-y-3 mb-6">
+            <div className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400">
+              <MapPin className="w-4 h-4 mr-2.5 text-brand-gold" />
               <span>{country}</span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <Calendar className="w-4 h-4 mr-2 text-gold" />
+            <div className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400">
+              <Calendar className="w-4 h-4 mr-2.5 text-brand-gold" />
               <span>{t('common.deadline')}: {new Date(deadline).toLocaleDateString(locale)}</span>
             </div>
           </div>
@@ -238,36 +239,36 @@ export default function OpportunityCard({
 
           {/* Deadline Countdown */}
           <div
-            className={`flex items-center justify-between p-3 rounded-lg ${
+            className={`flex items-center justify-between p-3.5 rounded-xl transition-colors ${
               isDeadlineSoon
-                ? 'bg-red-50 border border-red-200'
-                : 'bg-gray-50 border border-gray-200'
+                ? 'bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20'
+                : 'bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10'
             }`}
           >
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2.5">
               <Clock
                 className={`w-4 h-4 ${
                   isExpired || countdown.daysLeft === 0
-                    ? 'text-red-600'
+                    ? 'text-red-600 dark:text-red-400'
                     : isDeadlineSoon
-                    ? 'text-yellow-600'
-                    : 'text-gray-600'
+                    ? 'text-yellow-600 dark:text-yellow-400'
+                    : 'text-gray-500 dark:text-gray-400'
                 }`}
               />
               <span
-                className={`text-xs font-medium ${
+                className={`text-xs font-bold tracking-wide ${
                   isExpired || countdown.daysLeft === 0
-                    ? 'text-red-600'
+                    ? 'text-red-600 dark:text-red-400'
                     : isDeadlineSoon
-                    ? 'text-yellow-600'
-                    : 'text-gray-600'
+                    ? 'text-yellow-600 dark:text-yellow-400'
+                    : 'text-gray-600 dark:text-gray-300'
                 }`}
               >
                 {timeRemaining}
               </span>
             </div>
-            <span className="text-xs font-semibold text-gold">
-              {t('common.learnMore')} →
+            <span className="text-xs font-black uppercase tracking-wider text-brand-gold group-hover:translate-x-1 transition-transform flex items-center">
+              {t('common.learnMore')} <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </span>
           </div>
         </div>

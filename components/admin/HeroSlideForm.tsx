@@ -7,6 +7,7 @@ import { Save, ArrowLeft, Loader2, Image as ImageIcon, UploadCloud } from "lucid
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import { useTranslations } from "next-intl";
 
 export default function HeroSlideForm({ locale, initialData }: { locale: string, initialData?: any }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -14,6 +15,8 @@ export default function HeroSlideForm({ locale, initialData }: { locale: string,
   const [imageUrl, setImageUrl] = useState(initialData?.imageUrl || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const t = useTranslations("admin.forms");
+  const tCommon = useTranslations("admin.common");
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -68,43 +71,43 @@ export default function HeroSlideForm({ locale, initialData }: { locale: string,
           <ArrowLeft className="w-5 h-5 text-gray-400" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-white">{initialData ? "Edit Slide" : "Add New Slide"}</h1>
-          <p className="text-gray-400 mt-1">{initialData ? "Update existing homepage banner." : "Create a new banner for the homepage slider."}</p>
+          <h1 className="text-3xl font-bold text-white">{initialData ? t("updateSlide") : t("publishSlide")}</h1>
+          <p className="text-gray-400 mt-1">{initialData ? t("updateSlide") : t("publishSlide")}</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-xl space-y-6">
-          <h2 className="text-xl font-semibold text-white border-b border-white/10 pb-4">Content</h2>
+          <h2 className="text-xl font-semibold text-white border-b border-white/10 pb-4">{t("basicInfo")}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2 md:col-span-2">
-              <label className="text-sm font-medium text-gray-300">Title *</label>
+              <label className="text-sm font-medium text-gray-300">{t("slideTitle")}</label>
               <input required name="title" defaultValue={initialData?.title} type="text" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Study in Europe" />
             </div>
             
             <div className="space-y-2 md:col-span-2">
-              <label className="text-sm font-medium text-gray-300">Subtitle *</label>
+              <label className="text-sm font-medium text-gray-300">{t("slideSubtitle")}</label>
               <textarea required name="subtitle" defaultValue={initialData?.subtitle} rows={3} className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors" placeholder="Short description..." />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Button Text *</label>
+              <label className="text-sm font-medium text-gray-300">{t("buttonText")}</label>
               <input required name="buttonText" defaultValue={initialData?.buttonText} type="text" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. Explore Opportunities" />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Button Link *</label>
+              <label className="text-sm font-medium text-gray-300">{t("buttonLink")}</label>
               <input required name="buttonLink" defaultValue={initialData?.buttonLink} type="text" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors" placeholder="e.g. /en/opportunities" />
             </div>
           </div>
         </div>
 
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-xl space-y-6">
-          <h2 className="text-xl font-semibold text-white border-b border-white/10 pb-4">Media</h2>
+          <h2 className="text-xl font-semibold text-white border-b border-white/10 pb-4">{t("mediaLinks")}</h2>
           
           <div className="space-y-4">
-            <label className="text-sm font-medium text-gray-300">Slide Background Image</label>
+            <label className="text-sm font-medium text-gray-300">{t("slideImage")}</label>
             
             {imageUrl ? (
               <div className="relative w-full h-64 rounded-xl overflow-hidden border border-white/10 group">
@@ -116,7 +119,7 @@ export default function HeroSlideForm({ locale, initialData }: { locale: string,
                     className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-lg font-medium transition-colors"
                   >
                     <UploadCloud className="w-4 h-4" />
-                    Change Image
+                    {tCommon("uploadImage")}
                   </button>
                 </div>
               </div>
@@ -128,7 +131,7 @@ export default function HeroSlideForm({ locale, initialData }: { locale: string,
                 {isUploading ? (
                   <div className="flex flex-col items-center gap-2 text-gray-400">
                     <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-                    <span className="text-sm">Uploading to Cloudinary...</span>
+                    <span className="text-sm">Uploading...</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-gray-400">
@@ -149,21 +152,18 @@ export default function HeroSlideForm({ locale, initialData }: { locale: string,
               disabled={isUploading}
             />
             
-            <div className="text-xs text-gray-500 mt-2">
-              Alternatively, you can paste an external URL below:
-            </div>
             <input 
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               type="url" 
-              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors text-sm" 
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors text-sm mt-4" 
               placeholder="https://..." 
             />
           </div>
 
           <div className="flex items-center gap-3 pt-4 border-t border-white/10">
             <input type="checkbox" name="isActive" id="isActive" className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500" defaultChecked={initialData ? initialData.isActive : true} />
-            <label htmlFor="isActive" className="text-gray-300">Active (Show on homepage)</label>
+            <label htmlFor="isActive" className="text-gray-300">{t("isActive")}</label>
           </div>
         </div>
 
@@ -174,7 +174,7 @@ export default function HeroSlideForm({ locale, initialData }: { locale: string,
             className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white px-8 py-3 rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] disabled:opacity-50"
           >
             {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-            {isSubmitting ? "Saving..." : (initialData ? "Update Slide" : "Publish Slide")}
+            {isSubmitting ? tCommon("saving") : (initialData ? t("updateSlide") : t("publishSlide"))}
           </button>
         </div>
       </form>

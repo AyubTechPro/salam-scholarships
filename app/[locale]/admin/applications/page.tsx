@@ -1,10 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import { User, Eye, Globe, Mail, Phone, Calendar } from "lucide-react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 const prisma = new PrismaClient();
 
 export default async function ApplicationsPage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations("admin.applications");
+  
   const applications = await prisma.application.findMany({
     orderBy: { createdAt: "desc" },
     include: {
@@ -21,15 +24,15 @@ export default async function ApplicationsPage({ params: { locale } }: { params:
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">Applications</h1>
-          <p className="text-sm text-[#888] mt-1">Review student applications for opportunities.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">{t("title")}</h1>
+          <p className="text-sm text-[#888] mt-1">{t("description")}</p>
         </div>
       </div>
 
       <div className="border border-[#222] rounded-xl overflow-hidden bg-[#0A0A0A]">
         <div className="p-4 border-b border-[#222] flex items-center justify-between bg-[#111]">
           <div className="text-xs text-[#888]">
-            Total: <span className="text-[#EDEDED] font-medium">{applications.length}</span>
+            <span className="text-[#EDEDED] font-medium">{applications.length}</span>
           </div>
         </div>
 
@@ -37,10 +40,10 @@ export default async function ApplicationsPage({ params: { locale } }: { params:
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="border-b border-[#222] bg-[#111]">
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Applicant</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Program</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Status</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888] text-right">Date</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableApplicant")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableProgram")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableStatus")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888] text-right">{t("tableDate")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#222]">
@@ -91,7 +94,7 @@ export default async function ApplicationsPage({ params: { locale } }: { params:
                       </div>
                       <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link href={`/${locale}/admin/applications/${app.id}`} className="inline-flex items-center gap-1 px-2 py-1 bg-[#111] hover:bg-[#222] text-[#EDEDED] text-[10px] rounded transition-colors border border-[#333]">
-                          <Eye className="w-3 h-3" /> View Details
+                          <Eye className="w-3 h-3" /> {t("viewDetails")}
                         </Link>
                       </div>
                     </td>

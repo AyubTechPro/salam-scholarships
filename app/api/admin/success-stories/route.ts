@@ -20,8 +20,12 @@ export async function POST(req: NextRequest) {
         achievement: body.achievement,
         quote: body.quote,
         photoUrl: body.photoUrl,
-        isActive: body.isActive,
+        isActive: body.isActive ?? true,
         order: body.order || 0,
+        program: body.program || "Not specified",
+        country: body.country || "Not specified",
+        keyToSuccess: body.keyToSuccess || "",
+        fullStory: body.fullStory || "",
       }
     });
 

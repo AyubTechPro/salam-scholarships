@@ -3,10 +3,13 @@ import Link from "next/link";
 import { Plus, Search, Edit, Globe, Calendar } from "lucide-react";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { deleteProgram } from "@/app/actions/admin";
+import { getTranslations } from "next-intl/server";
 
 const prisma = new PrismaClient();
 
 export default async function ProgramsPage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations("admin.programs");
+  
   const programs = await prisma.program.findMany({
     orderBy: { createdAt: "desc" },
     select: {
@@ -26,15 +29,15 @@ export default async function ProgramsPage({ params: { locale } }: { params: { l
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">Opportunities Hub</h1>
-          <p className="text-sm text-[#888] mt-1">Manage scholarships, universities, and programs.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">{t("title")}</h1>
+          <p className="text-sm text-[#888] mt-1">{t("description")}</p>
         </div>
         <Link 
           href={`/${locale}/admin/programs/new`}
           className="flex items-center gap-2 bg-[#EDEDED] hover:bg-white text-[#0A0A0A] px-4 py-2 rounded-lg font-medium transition-colors text-sm"
         >
           <Plus className="w-5 h-5" />
-          Add Program
+          {t("addNew")}
         </Link>
       </div>
 
@@ -45,12 +48,12 @@ export default async function ProgramsPage({ params: { locale } }: { params: { l
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#888]" />
             <input 
               type="text" 
-              placeholder="Search programs..." 
+              placeholder={`${t("tableProgram")}...`} 
               className="w-full bg-[#0A0A0A] border border-[#333] rounded-md pl-9 pr-4 py-1.5 text-sm text-[#EDEDED] placeholder-[#666] focus:outline-none focus:border-[#666] transition-colors"
             />
           </div>
           <div className="text-xs text-[#888]">
-            Total: <span className="text-[#EDEDED] font-medium">{programs.length}</span>
+            <span className="text-[#EDEDED] font-medium">{programs.length}</span>
           </div>
         </div>
 
@@ -58,18 +61,18 @@ export default async function ProgramsPage({ params: { locale } }: { params: { l
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="border-b border-[#222] bg-[#111]">
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Program</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Location & Inst.</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Details</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888]">Status & Deadline</th>
-                <th className="px-5 py-3 text-xs font-medium text-[#888] text-right">Actions</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableProgram")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableCountry")} & Inst.</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableLevel")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888]">{t("tableStatus")}</th>
+                <th className="px-5 py-3 text-xs font-medium text-[#888] text-right">{t("tableActions")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#222]">
               {programs.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-8 text-center text-gray-500">
-                    No programs found. Click &quot;Add Program&quot; to create one.
+                    No programs found.
                   </td>
                 </tr>
               ) : (
@@ -103,11 +106,11 @@ export default async function ProgramsPage({ params: { locale } }: { params: { l
                       <div className="flex flex-col gap-2">
                         {program.isActive ? (
                           <span className="text-[10px] font-medium px-1.5 py-0.5 text-emerald-500 border border-emerald-500/20 rounded inline-flex items-center w-max">
-                            Active
+                            {t("active")}
                           </span>
                         ) : (
                           <span className="text-[10px] font-medium px-1.5 py-0.5 text-[#888] border border-[#333] rounded inline-flex items-center w-max">
-                            Inactive
+                            {t("inactive")}
                           </span>
                         )}
                         <div className="text-[10px] text-[#666] flex items-center gap-1">

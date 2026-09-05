@@ -4,10 +4,16 @@ import { Plus, Edit, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { deleteHeroSlide } from "@/app/actions/admin";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import { getTranslations } from "next-intl/server";
 
 const prisma = new PrismaClient();
 
 export default async function HeroSliderPage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations("admin.heroSlider");
+  const tCommon = await getTranslations("admin.common");
+  const tPrograms = await getTranslations("admin.programs");
+  const tForms = await getTranslations("admin.forms");
+  
   const slides = await prisma.heroSlide.findMany({
     orderBy: { order: "asc" }
   });
@@ -16,28 +22,28 @@ export default async function HeroSliderPage({ params: { locale } }: { params: {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">Hero Banner</h1>
-          <p className="text-sm text-[#888] mt-1">Manage the main image sliders and text on the homepage.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#EDEDED]">{t("title")}</h1>
+          <p className="text-sm text-[#888] mt-1">{t("description")}</p>
         </div>
         <Link 
           href={`/${locale}/admin/hero-slider/new`}
           className="flex items-center gap-2 bg-[#EDEDED] hover:bg-white text-[#0A0A0A] px-4 py-2 rounded-lg font-medium transition-colors text-sm"
         >
           <Plus className="w-4 h-4" />
-          Add Slide
+          {t("addNew")}
         </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {slides.length === 0 ? (
           <div className="col-span-full text-center p-12 bg-[#0A0A0A] rounded-xl border border-[#222]">
-            <p className="text-[#666] mb-4 text-sm">No slides found. The homepage is currently using dummy data.</p>
+            <p className="text-[#666] mb-4 text-sm">{tCommon("noData")}</p>
             <Link 
               href={`/${locale}/admin/hero-slider/new`}
               className="inline-flex items-center gap-2 bg-[#111] hover:bg-[#222] text-[#EDEDED] px-4 py-2 rounded-lg font-medium transition-colors text-sm border border-[#333]"
             >
               <Plus className="w-4 h-4" />
-              Create your first slide
+              {t("addNew")}
             </Link>
           </div>
         ) : (
@@ -61,7 +67,7 @@ export default async function HeroSliderPage({ params: { locale } }: { params: {
                   <div className="flex items-center gap-2 mb-4 bg-[#111] p-3 rounded-md border border-[#222]">
                     <LinkIcon className="w-4 h-4 text-[#888]" />
                     <div>
-                      <p className="text-[10px] text-[#666] font-medium uppercase tracking-wider">Button Text</p>
+                      <p className="text-[10px] text-[#666] font-medium uppercase tracking-wider">{tForms("buttonText")}</p>
                       <p className="text-sm text-[#EDEDED]">{slide.buttonText}</p>
                     </div>
                   </div>
@@ -69,7 +75,7 @@ export default async function HeroSliderPage({ params: { locale } }: { params: {
                 
                 <div className="flex items-center justify-between pt-2">
                   <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${slide.isActive ? 'text-emerald-500 border border-emerald-500/20' : 'text-[#888] border border-[#333]'}`}>
-                    {slide.isActive ? 'Active' : 'Hidden'}
+                    {slide.isActive ? tPrograms("active") : tPrograms("inactive")}
                   </span>
                   
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

@@ -63,15 +63,16 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
 
           {/* Animated Title */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            initial={{ opacity: 0, y: 40, rotateX: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.1, type: "spring", stiffness: 100 }}
+            style={{ perspective: 1000 }}
           >
             <div className="relative flex items-center justify-center mb-6">
               {/* Premium Glow Shimmer Orb */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] md:w-[60%] h-[150%] bg-brand-gold/20 blur-[100px] rounded-[100%] pointer-events-none animate-pulse-slow" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[70%] h-[160%] bg-brand-gold/30 blur-[120px] rounded-[100%] pointer-events-none animate-pulse-slow mix-blend-screen" />
               
-              <Sparkles className="relative z-10 w-10 h-10 text-brand-gold mr-4 sm:w-12 sm:h-12" />
+              <Sparkles className="relative z-10 w-10 h-10 text-brand-gold mr-4 sm:w-12 sm:h-12 animate-bounce-slow" />
               <h1 className="relative z-10 text-5xl md:text-7xl font-sans font-black tracking-tight mb-2 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">
                 {initialSlide ? (
                   locale === 'tj' && initialSlide.titleTj ? initialSlide.titleTj :
@@ -84,10 +85,10 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
 
           {/* Dynamic Typewriter Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl md:text-3xl text-white/70 font-medium mb-12 max-w-4xl mx-auto tracking-wide"
+            initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
+            className="text-xl md:text-3xl text-white/80 font-medium mb-12 max-w-4xl mx-auto tracking-wide leading-relaxed"
           >
             {initialSlide && (initialSlide.subtitle || initialSlide.subtitleRu || initialSlide.subtitleTj) ? (
               <>
@@ -114,11 +115,14 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
 
           {/* Quick Search Bar */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-3xl mx-auto mb-8"
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, type: "spring", stiffness: 120 }}
+            className="max-w-3xl mx-auto mb-8 relative group"
+            style={{ perspective: 1000 }}
           >
+            {/* Ambient Shadow for Input */}
+            <div className="absolute inset-0 bg-brand-gold/20 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
                 <Search className="h-6 w-6 text-white/50" />
@@ -177,7 +181,7 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
                     ? 'Волшебный поиск... (например: "Стипендия IT в Германии")'
                     : 'Magic Search... (e.g., "Find me a scholarship in Germany")'
                 }
-                className="w-full pl-16 pr-44 py-6 rounded-2xl text-white text-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 bg-white/5 border border-white/10 backdrop-blur-xl placeholder-white/40 transition-all shadow-2xl hover:bg-white/10"
+                className="w-full pl-16 pr-48 py-7 rounded-3xl text-white text-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/70 bg-white/10 border border-white/20 backdrop-blur-2xl placeholder-white/40 transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-white/15 focus:bg-white/20 hover:border-brand-gold/50"
               />
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-2">
                 {magicSearching ? (
@@ -240,8 +244,8 @@ export default function Hero({ initialSlide }: { initialSlide?: any }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="flex flex-wrap items-center justify-center gap-3 mt-6 mb-16 max-w-3xl mx-auto"
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="flex flex-wrap items-center justify-center gap-3 mt-8 mb-16 max-w-3xl mx-auto"
           >
             <span className="text-white/50 text-sm font-medium mr-2">
               {locale === 'tj' ? 'Маъмултарин:' : locale === 'ru' ? 'Популярно:' : 'Trending:'}

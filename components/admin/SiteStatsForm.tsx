@@ -5,10 +5,13 @@ import { Save, Loader2 } from "lucide-react";
 import { updateSiteStats } from "@/app/actions/settings";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function SiteStatsForm({ initialStats, locale }: { initialStats: any, locale: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const t = useTranslations("admin.forms");
+  const tCommon = useTranslations("admin.common");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,14 +31,14 @@ export default function SiteStatsForm({ initialStats, locale }: { initialStats: 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-[#0A0A0A] border border-[#222] rounded-xl p-6">
-        <h2 className="text-sm font-medium text-[#EDEDED] mb-1">Homepage Stats (Trust Bar)</h2>
+        <h2 className="text-sm font-medium text-[#EDEDED] mb-1">{t("marketingStats")}</h2>
         <p className="text-xs text-[#888] mb-6">
           These numbers appear on the homepage. They are added to the real database counts.
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-xs font-medium text-[#EDEDED]">Extra Opportunities / Programs</label>
+            <label className="text-xs font-medium text-[#EDEDED]">{t("statsOpportunities")}</label>
             <input 
               name="manualProgramsOffset" 
               type="number" 
@@ -45,7 +48,7 @@ export default function SiteStatsForm({ initialStats, locale }: { initialStats: 
           </div>
           
           <div className="space-y-2">
-            <label className="text-xs font-medium text-[#EDEDED]">Extra Countries</label>
+            <label className="text-xs font-medium text-[#EDEDED]">{t("statsCountries")}</label>
             <input 
               name="manualCountriesOffset" 
               type="number" 
@@ -55,7 +58,7 @@ export default function SiteStatsForm({ initialStats, locale }: { initialStats: 
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-[#EDEDED]">Base Consultations Count</label>
+            <label className="text-xs font-medium text-[#EDEDED]">{t("statsStudents")}</label>
             <input 
               name="manualConsultationsBase" 
               type="number" 
@@ -83,7 +86,7 @@ export default function SiteStatsForm({ initialStats, locale }: { initialStats: 
             className="flex items-center gap-2 bg-[#EDEDED] hover:bg-white text-[#0A0A0A] px-4 py-2 rounded-lg font-medium transition-colors text-sm disabled:opacity-50"
           >
             {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Save Settings
+            {isSubmitting ? tCommon("saving") : t("saveSettings")}
           </button>
         </div>
       </div>
